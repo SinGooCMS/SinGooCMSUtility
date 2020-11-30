@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SinGooCMS.Utility\SinGooCMS.Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="upload\" />
+  </ItemGroup>
+
+</Project>
