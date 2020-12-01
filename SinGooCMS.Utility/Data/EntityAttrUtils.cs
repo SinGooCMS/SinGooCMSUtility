@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SinGooCMS.Utility
 {
     /// <summary>
-    /// 实体类 特性助手
+    /// 实体类 特性工具
     /// </summary>
-    public class AttrAssistant
+    public class EntityAttrUtils
     {
         /// <summary>
         /// 表名
