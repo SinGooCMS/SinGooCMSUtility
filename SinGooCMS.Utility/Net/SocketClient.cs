@@ -35,7 +35,7 @@ namespace SinGooCMS.Utility
             {
                 return listener.AcceptSocket();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }

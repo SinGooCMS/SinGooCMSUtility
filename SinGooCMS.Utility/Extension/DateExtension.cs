@@ -171,6 +171,83 @@ namespace SinGooCMS.Utility.Extension
 
         #endregion
 
+        #region 读取中国时辰
+
+        /// <summary>
+        /// 读取中国时辰，一天12个时辰，一个时辰2个小时
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns>返回元组，.DIZHI表示地支时辰，.CNHOUR表示时辰范围</returns>
+        public static (string DIZHI, string CNHOUR) GetCNHour(this DateTime time)
+        {
+            if (time.Hour >= 23 || time.Hour < 1)
+            {
+                //子时（23 - 1点）：半夜
+                return ("子时", "半夜");
+            }
+            else if (time.Hour >= 1 && time.Hour < 3)
+            {
+                //丑时（1 - 3点）：凌晨
+                return ("丑时", "凌晨");
+            }
+            else if (time.Hour >= 3 && time.Hour < 5)
+            {
+                //寅时（3 - 5点）：黎明
+                return ("寅时", "黎明");
+            }
+            else if (time.Hour >= 5 && time.Hour < 7)
+            {
+                //卯时（5 - 7点）：清晨
+                return ("卯时", "清晨");
+            }
+            else if (time.Hour >= 7 && time.Hour < 9)
+            {
+                //辰时（7 - 9点）：早上
+                return ("辰时", "早上");
+            }
+            else if (time.Hour >= 9 && time.Hour < 11)
+            {
+                //巳时（9 - 11点）：上午
+                return ("巳时", "上午");
+            }
+            else if (time.Hour >= 11 && time.Hour < 13)
+            {
+                //午时（11 - 13点）：中午
+                return ("午时", "中午");
+            }
+            else if (time.Hour >= 13 && time.Hour < 15)
+            {
+                //未时（13 - 15点）：午后
+                return ("未时", "午后");
+            }
+            else if (time.Hour >= 15 && time.Hour < 17)
+            {
+                //申时（15 - 17点）：下午
+                return ("申时", "下午");
+            }
+            else if (time.Hour >= 17 && time.Hour < 19)
+            {
+                //酉时（17 - 19点）：傍晚
+                return ("酉时", "傍晚");
+            }
+            else if (time.Hour >= 19 && time.Hour < 21)
+            {
+                //戌时（19 - 21点）：晚上
+                return ("戌时", "晚上");
+            }
+            else if (time.Hour >= 21 && time.Hour < 23)
+            {
+                //亥时（21 - 23点）：深夜
+                return ("亥时", "深夜");
+            }
+            else
+            {
+                return ("子时", "半夜");
+            }
+        }
+
+        #endregion
+
         #region 相对于1970-01-01
 
         /// <summary>

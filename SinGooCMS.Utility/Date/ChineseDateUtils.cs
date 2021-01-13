@@ -50,6 +50,10 @@ namespace SinGooCMS.Utility
         /// </summary>
         public string cnFtvs = "";
 
+        /// <summary>
+        /// 重写ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"农历{cnStrYear}年{cnStrMonth}月{cnStrDay}";

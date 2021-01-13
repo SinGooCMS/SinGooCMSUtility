@@ -615,7 +615,7 @@ namespace SinGooCMS.Utility
         /// <param name="newDir">新建文件夹</param>
         public void MakeDir(string relativePath, string newDir)
         {
-            var reqFtp = GenerateFtpReq(StringUtils.GenerateUri(new string[] { FtpServer, relativePath, newDir }, "ftp://"), WebRequestMethods.Ftp.MakeDirectory);        
+            var reqFtp = GenerateFtpReq(StringUtils.GenerateUri(new string[] { FtpServer, relativePath, newDir }, "ftp://"), WebRequestMethods.Ftp.MakeDirectory);
             reqFtp.UseBinary = true;
             using (var response = (FtpWebResponse)reqFtp.GetResponse())
             {

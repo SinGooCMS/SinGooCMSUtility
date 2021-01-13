@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using SinGooCMS.Utility.Extension;
+using System.Net;
 
 namespace SinGooCMS.Utility
 {
@@ -25,12 +26,19 @@ namespace SinGooCMS.Utility
                 ip = UtilsBase.HttpContext.Connection.RemoteIpAddress.ToString();
             }
 #else
-            ip = UtilsBase.HttpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ?? string.Empty;
-            if (!ip.IsIP())
-                ip = UtilsBase.HttpContext.Request.ServerVariables["REMOTE_ADDR"] ?? string.Empty;
+            if (UtilsBase.HttpContext != null)
+            {
+                ip = UtilsBase.HttpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ?? string.Empty;
+                if (!ip.IsIP())
+                    ip = UtilsBase.HttpContext.Request.ServerVariables["REMOTE_ADDR"] ?? string.Empty;
 
-            if (!ip.IsIP())
-                ip = UtilsBase.HttpContext.Request.UserHostAddress;
+                if (!ip.IsIP())
+                    ip = UtilsBase.HttpContext.Request.UserHostAddress;
+            }
+            else
+            {
+                return Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(p => p.AddressFamily.ToString() == "InterNetwork")?.ToString();
+            }
 #endif
 
             return ip;

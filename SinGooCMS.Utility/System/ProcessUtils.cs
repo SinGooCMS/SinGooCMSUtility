@@ -160,5 +160,31 @@ namespace SinGooCMS.Utility
         }
 
         #endregion
+
+        #region 关闭进程
+
+        /// <summary>
+        /// 停止进程
+        /// </summary>
+        /// <param name="name"></param>
+        public static void Kill(string name)
+        {
+            Process[] processes = Process.GetProcessesByName(name);
+            foreach (Process p in processes)
+            {
+                p.Kill();
+                p.Close();
+            }
+        }
+        /// <summary>
+        /// 停止当前进程
+        /// </summary>
+        public static void KillCurrent()
+        {
+            Process current = Process.GetCurrentProcess();
+            current.Kill();
+        }
+
+        #endregion
     }
 }

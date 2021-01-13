@@ -127,6 +127,7 @@
     <Compile Include="ExtensionTest.cs" />
     <Compile Include="FileTest.cs" />
     <Compile Include="FtpTest.cs" />
+    <Compile Include="HttpTest.cs" />
     <Compile Include="ImageTest.cs" />
     <Compile Include="IPLocationTest.cs" />
     <Compile Include="JiaMiTest.cs" />

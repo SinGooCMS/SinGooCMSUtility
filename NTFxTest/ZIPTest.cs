@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SinGooCMS.Utility.Extension;
 using SinGooCMS.Utility;
 
-namespace CoreTest
+namespace NTFxTest
 {
     [TestClass]
     public class ZIPTest

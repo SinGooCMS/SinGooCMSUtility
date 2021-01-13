@@ -90,16 +90,16 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// ½ØÈ¡×Ö·û´®
         /// </summary>
-        /// <param name="SoucreStr"></param>
+        /// <param name="sourceStr"></param>
         /// <param name="len"></param>
         /// <param name="appendString"></param>
         /// <returns></returns>
-        public static string Cut(string SoucreStr, int len, string appendString = "")
+        public static string Cut(string sourceStr, int len, string appendString = "")
         {
-            if (SoucreStr.Length >= len)
-                return SoucreStr.Substring(0, len) + appendString;
+            if (sourceStr.Length >= len)
+                return sourceStr.Substring(0, len) + appendString;
 
-            return SoucreStr;
+            return sourceStr;
         }
 
         /// <summary>

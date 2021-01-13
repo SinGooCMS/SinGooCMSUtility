@@ -5,6 +5,8 @@ using System.IO;
 using System.Text;
 using System.Net;
 using System.Linq;
+using SinGooCMS.Utility.Extension;
+using System.Net.NetworkInformation;
 
 namespace SinGooCMS.Utility
 {
@@ -147,8 +149,10 @@ namespace SinGooCMS.Utility
             string reqCookies = string.Empty;
             string rspCookies = string.Empty;
             IDictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Host", host);
-            headers.Add("Referer", referer);
+            if (!host.IsNullOrEmpty())
+                headers.Add("Host", host);
+            if (!referer.IsNullOrEmpty())
+                headers.Add("Referer", referer);
 
             return HttpPost(strUrl, postData, 30 * 1000, "utf-8", ref reqCookies, ref rspCookies, false, headers);
         }
@@ -296,6 +300,29 @@ namespace SinGooCMS.Utility
 
             return flag;
         }
+        #endregion
+
+        #region ping工具
+
+        /// <summary>
+        /// 是否能ping通IP
+        /// </summary>
+        /// <param name="hostNameOrAddr">域名或者IP</param>
+        /// <returns></returns>
+        public static bool Ping(string hostNameOrAddr)
+        {
+            try
+            {
+                Ping ping = new Ping();
+                PingReply reply = ping.Send(hostNameOrAddr);
+                return reply.Status == IPStatus.Success;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         #endregion
     }
 }

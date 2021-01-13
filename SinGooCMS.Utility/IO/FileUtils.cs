@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SinGooCMS.Utility
 {
@@ -38,12 +39,19 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// 读取文件内容
+        /// 异步创建文件
         /// </summary>
         /// <param name="absolutePath"></param>
-        /// <returns></returns>
-        public static string ReadFileContent(string absolutePath) =>
-            ReadFileContent(absolutePath, Encoding.UTF8);
+        /// <param name="fileContent"></param>
+        /// <param name="strCodeType"></param>
+        public static async void CreateFileAsync(string absolutePath, string fileContent, string strCodeType)
+        {
+            Encoding code = Encoding.GetEncoding(strCodeType);
+            StreamWriter mySream = new StreamWriter(absolutePath, false, code);
+            await mySream.WriteLineAsync(fileContent);
+            await mySream.FlushAsync();
+            mySream.Close();
+        }
 
         /// <summary>
         /// 读取文件内容
@@ -51,8 +59,11 @@ namespace SinGooCMS.Utility
         /// <param name="absolutePath"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public static string ReadFileContent(string absolutePath, Encoding encoding)
+        public static string ReadFileContent(string absolutePath, Encoding encoding = null)
         {
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+
             string fileContent = string.Empty;
             using (StreamReader sr = new StreamReader(absolutePath, encoding))
             {
@@ -63,31 +74,66 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// 写文件
+        /// 异步读取文件内容
         /// </summary>
         /// <param name="absolutePath"></param>
-        /// <param name="fileContent"></param>
-        /// <param name="isAppend"></param>
-        public static void WriteFileContent(string absolutePath, string fileContent, bool isAppend) =>
-            WriteFileContent(absolutePath, fileContent, Encoding.UTF8, isAppend);
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public static async Task<string> ReadFileContentAsync(string absolutePath, Encoding encoding = null)
+        {
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+
+            string fileContent = string.Empty;
+            using (StreamReader sr = new StreamReader(absolutePath, encoding))
+            {
+                fileContent = await sr.ReadToEndAsync();
+            }
+            return fileContent;
+
+        }
+
 
         /// <summary>
         /// 写文件
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="fileContent"></param>
-        /// <param name="codeType"></param>
+        /// <param name="encoding"></param>
         /// <param name="isAppend"></param>
-        public static void WriteFileContent(string absolutePath, string fileContent, Encoding codeType, bool isAppend)
+        public static void WriteFileContent(string absolutePath, string fileContent, bool isAppend, Encoding encoding = null)
         {
             if (!File.Exists(absolutePath))
                 CreateFile(absolutePath, string.Empty);
 
-            StreamWriter Fso = new StreamWriter(absolutePath, isAppend, codeType);
-            Fso.WriteLine(fileContent);
-            Fso.Flush();
-            Fso.Close();
-            Fso.Dispose();
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+
+            StreamWriter sw = new StreamWriter(absolutePath, isAppend, encoding);
+            sw.WriteLine(fileContent);
+            sw.Flush();
+            sw.Close();
+        }
+
+        /// <summary>
+        /// 异步写文件
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <param name="fileContent"></param>
+        /// <param name="isAppend"></param>
+        /// <param name="encoding"></param>
+        public static async void WriteFileContentAsync(string absolutePath, string fileContent, bool isAppend, Encoding encoding = null)
+        {
+            if (!File.Exists(absolutePath))
+                CreateFile(absolutePath, string.Empty);
+
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+
+            StreamWriter sw = new StreamWriter(absolutePath, isAppend, encoding);
+            await sw.WriteLineAsync(fileContent);
+            await sw.FlushAsync();
+            sw.Close();
         }
 
         /// <summary>
@@ -127,10 +173,8 @@ namespace SinGooCMS.Utility
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string GetExtension(string fileName)
-        {
-            return System.IO.Path.GetExtension(fileName);
-        }
+        public static string GetExtension(string fileName) => System.IO.Path.GetExtension(fileName);
+
         /// <summary>
         /// 获取文件大小
         /// </summary>
@@ -424,7 +468,7 @@ namespace SinGooCMS.Utility
                 if (pFileStream != null)
                     pFileStream.Close();
             }
-        }        
+        }
 
         #endregion
     }

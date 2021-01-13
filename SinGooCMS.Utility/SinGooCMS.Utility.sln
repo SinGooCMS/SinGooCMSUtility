@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreTest", "..\CoreTest\Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTFxTest", "..\NTFxTest\NTFxTest.csproj", "{040B3B73-3C0B-41BB-AEC7-4D0A9D1C2284}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreWebTest", "..\CoreWebTest\CoreWebTest.csproj", "{444D4936-91DB-4048-8D22-B7586F074C75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreWebTest", "..\CoreWebTest\CoreWebTest.csproj", "{444D4936-91DB-4048-8D22-B7586F074C75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTFxWebTest", "..\NTFxWebTest\NTFxWebTest.csproj", "{D1DE1915-C1D3-412A-B3D3-C2EC2FD94673}"
 EndProject

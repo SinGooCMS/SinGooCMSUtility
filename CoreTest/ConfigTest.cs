@@ -18,6 +18,9 @@ namespace CoreTest
             Console.WriteLine($"SQLConnSTR：{ConfigUtils.DefConnStr}\r\n");
             //appsetting
             Console.WriteLine($"EnableCache：{ConfigUtils.GetAppSetting<string>("EnableCache")}\r\n");
+
+            //core
+            Console.WriteLine("配置值："+ConfigUtils.GetByPath<string>("Logging:LogLevel:Default"));
         }
     }
 }

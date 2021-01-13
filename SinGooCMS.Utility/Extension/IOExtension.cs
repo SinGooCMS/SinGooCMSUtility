@@ -53,17 +53,46 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
+        /// 异步写byte[]到fileName
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="fileName">保存至硬盘路径</param>
+        public static async void WriteToFileAsync(this byte[] bytes, string fileName)
+        {
+            using (var fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
+            {
+                await fileStream.WriteAsync(bytes, 0, bytes.Length);
+                await fileStream.FlushAsync();
+            }
+        }
+
+        /// <summary>
         /// 将内存流转储成文件
         /// </summary>
         /// <param name="ms"></param>
         /// <param name="filename"></param>
-        public static void SaveFile(this MemoryStream ms, string filename)
+        public static void SaveFile(this Stream ms, string filename)
         {
             using (var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
                 byte[] buffer = ms.ToArray(); // 转化为byte格式存储
                 fs.Write(buffer, 0, buffer.Length);
                 fs.Flush();
+            }
+        }
+
+        /// <summary>
+        /// 异步将内存流转储成文件
+        /// </summary>
+        /// <param name="ms"></param>
+        /// <param name="filename"></param>
+        public static async void SaveFileAsync(this Stream ms, string filename)
+        {
+            using (var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                byte[] buffer = ms.ToArray(); // 转化为byte格式存储
+                await fs.WriteAsync(buffer, 0, buffer.Length);
+                await fs.FlushAsync();
             }
         }
 
@@ -76,7 +105,7 @@ namespace SinGooCMS.Utility.Extension
         /// </summary>
         /// <param name="fs">源文件流</param>
         /// <returns>MD5 值16进制字符串</returns>
-        public static string GetFileMD5(this FileStream fs) => HashFile(fs, "md5");
+        public static string GetFileMD5(this Stream fs) => HashFile(fs, "md5");
 
         /// <summary>
         /// 计算文件的 sha1 值

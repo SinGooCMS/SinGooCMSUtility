@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SinGooCMS.Utility.Extension;
 using SinGooCMS.Utility;
 
-namespace CoreTest
+namespace NTFxTest
 {
     [TestClass]
     public class StringTest
@@ -50,6 +50,14 @@ namespace CoreTest
             Console.WriteLine($"【今天天气不错，后天可能会下雪】的拼音：{StringUtils.GetChineseSpell(txtZHCN)} \r\n");
             Console.WriteLine($"【今天天气不错，后天可能会下雪】的拼音首字母：{StringUtils.GetChineseSpellFirst(txtZHCN)}\r\n");
 
+        }
+
+        [TestMethod]
+        public void TestOther()
+        {
+            Console.WriteLine("转人民币：" + 135.83m.ToRMB()); //转人民币：壹佰叁拾伍圆捌角叁分
+            Console.WriteLine("掩码：" + "17788760902".Mask()); //掩码：177****0902
+            Assert.AreEqual(" 我是 江 西人".RemoveWhiteSpace(), "我是江西人");
         }
     }
 }

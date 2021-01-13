@@ -19,8 +19,8 @@ namespace CoreTest
              * 这样就支持 gb2312 了
              */
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-            var ip = ""; //"218.95.66.68";
+            
+            var ip = "218.95.66.68";
             Console.WriteLine("IP定位："+new IPScanner().IPLocation(ip));
         }
     }

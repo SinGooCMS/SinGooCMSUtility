@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 #if NETSTANDARD2_1
 using Microsoft.Extensions.Configuration;
@@ -53,6 +54,38 @@ namespace SinGooCMS.Utility
         #endregion
 
         #region 读取配置
+
+        /// <summary>
+        /// 根据层级路径读取配置值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path">如 EPPlus:ExcelPackage:LicenseContext</param>
+        /// <returns></returns>
+        public static T GetByPath<T>(string path)
+        {
+            var section= Configuration.GetSection(path.Split(':')[0]);
+            return GetByPath<T>(section, path, 0);
+        }
+
+        private static T GetByPath<T>(IConfigurationSection section, string path, int depth)
+        {
+            var arr = path.Split(':');
+            var childs = section.GetChildren();
+
+            if (childs.Count() > 0 && depth < arr.Length - 1)
+            {
+                depth++;
+                var sectionNew = childs.Where(p => p.Key == arr[depth]).FirstOrDefault();
+                if (sectionNew != null)
+                    return GetByPath<T>(sectionNew, path, depth);
+                else
+                    return (T)Convert.ChangeType(section.Value, typeof(T));
+            }
+            else
+            {
+                return (T)Convert.ChangeType(section.Value, typeof(T));
+            }
+        }
 
         /// <summary>
         /// 获取配置值

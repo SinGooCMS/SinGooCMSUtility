@@ -14,9 +14,9 @@ namespace CoreTest
         {
             ShareFileUtils.DisconnectAll();
 
-            string path = @"\\172.18.20.110";
+            string path = @"\\172.18.20.109";
             string uid = @"luxshare\11000890";
-            string pwd = @"abc";
+            string pwd = @"123";
 
             var client = ShareFileUtils.Connect(path, uid, pwd);
             if (client != null)

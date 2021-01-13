@@ -92,43 +92,5 @@ namespace SinGooCMS.Utility.Extension
                 fs.Flush();
             }
         }
-
-        /// <summary>
-        /// 计算文件的 MD5 值
-        /// </summary>
-        /// <param name="fs">源文件流</param>
-        /// <returns>MD5 值16进制字符串</returns>
-        public static string GetFileMD5(this FileStream fs) => HashFile(fs, "md5");
-
-        /// <summary>
-        /// 计算文件的 sha1 值
-        /// </summary>
-        /// <param name="fs">源文件流</param>
-        /// <returns>sha1 值16进制字符串</returns>
-        public static string GetFileSha1(this Stream fs) => HashFile(fs, "sha1");
-
-        /// <summary>
-        /// 计算文件的哈希值
-        /// </summary>
-        /// <param name="fs">被操作的源数据流</param>
-        /// <param name="algo">加密算法</param>
-        /// <returns>哈希值16进制字符串</returns>
-        private static string HashFile(Stream fs, string algo)
-        {
-            HashAlgorithm crypto = null;
-            if (algo == "sha1")
-                crypto = new SHA1CryptoServiceProvider();
-            else
-                crypto = new MD5CryptoServiceProvider();
-
-            byte[] retVal = crypto.ComputeHash(fs);
-
-            StringBuilder sb = new StringBuilder();
-            foreach (var t in retVal)
-            {
-                sb.Append(t.ToString("x2"));
-            }
-            return sb.ToString();
-        }
     }
 }

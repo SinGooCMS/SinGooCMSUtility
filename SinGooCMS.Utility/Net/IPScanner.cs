@@ -32,6 +32,9 @@ namespace SinGooCMS.Utility
 
         #region 构造函数
 
+        /// <summary>
+        /// IP位置查找器
+        /// </summary>
         public IPScanner()
         {
             dataPath = SystemUtils.GetMapPath("/IPData/QQWry.Dat");

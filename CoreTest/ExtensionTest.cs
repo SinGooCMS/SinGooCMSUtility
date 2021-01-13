@@ -62,6 +62,7 @@ namespace CoreTest
             Console.WriteLine($"本年第几周：{now.WeekOfYear()}");
             Console.WriteLine($"格式化：{now.ToFormatDate()}");
             Console.WriteLine($"总秒数：{now.GetTotalSeconds()}");
+            Console.WriteLine($"当前中国时辰：{now.GetCNHour().DIZHI} - {now.GetCNHour().CNHOUR}");
         }
 
         [Test]
@@ -71,7 +72,10 @@ namespace CoreTest
             var b = "true";
 
             //Assert.AreEqual(0, a.To<int>());
-            Assert.AreEqual(true, b.To<bool>());
+            //Assert.AreEqual(true, b.To<bool>());
+
+            decimal d = 18.01m;
+            Assert.AreEqual(18, d.To<int>());
         }
 
         [Test]

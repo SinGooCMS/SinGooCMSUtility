@@ -24,6 +24,6 @@ namespace CoreTest
             Console.WriteLine(files.ToJson());
 
             Assert.AreEqual(true, System.IO.File.Exists("f:\\web.config"));
-        }
+        }        
     }
 }
