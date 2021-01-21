@@ -20,10 +20,17 @@ namespace SinGooCMS.Utility
         {
             var ip = "0.0.0.0";
 #if NETSTANDARD2_1
-            ip = UtilsBase.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            if (ip.ToString().IsNullOrEmpty())
+            if(UtilsBase.HttpContext!=null)
             {
-                ip = UtilsBase.HttpContext.Connection.RemoteIpAddress.ToString();
+                ip = UtilsBase.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+                if (ip.ToString().IsNullOrEmpty())
+                {
+                    ip = UtilsBase.HttpContext.Connection.RemoteIpAddress.ToString();
+                }
+            }
+            else
+            {
+                return Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(p => p.AddressFamily.ToString() == "InterNetwork")?.ToString();
             }
 #else
             if (UtilsBase.HttpContext != null)
@@ -47,12 +54,12 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// IP定位信息
         /// </summary>
-        /// <param name="ip"></param>
+        /// <param name="ip">不传IP，默认是当前的IP</param>
         /// <returns></returns>
-        public static string GetIPAreaStr(string ip)
+        public static string GetIPAreaStr(string ip = "")
         {
             if (ip.IsNullOrEmpty())
-                return string.Empty;
+                ip = GetIP();
 
             IPScanner scanner = new IPScanner();
             return scanner.IPLocation(ip); //从纯真数据库读取
@@ -117,4 +124,50 @@ namespace SinGooCMS.Utility
 
         #endregion
     }
+
+    #region IP地理位置信息
+
+    /// <summary>
+    /// IP地理位置信息
+    /// </summary>
+    public class IPAreaInfo
+    {
+        /// <summary>
+        /// 国家
+        /// </summary>
+        public string Country { get; set; }
+        /// <summary>
+        /// 省
+        /// </summary>
+        public string Province { get; set; }
+        /// <summary>
+        /// 市
+        /// </summary>
+        public string City { get; set; }
+        /// <summary>
+        /// 区
+        /// </summary>
+        public string County { get; set; }
+
+        /// <summary>
+        /// 重写ToString
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            if (!Country.IsNullOrEmpty())
+                builder.Append(Country);
+            if (!Province.IsNullOrEmpty())
+                builder.Append("," + Province);
+            if (!City.IsNullOrEmpty())
+                builder.Append("," + City);
+            if (!County.IsNullOrEmpty())
+                builder.Append("," + County);
+
+            return builder.ToString();
+        }
+    }
+
+    #endregion
 }

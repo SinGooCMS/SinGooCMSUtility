@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
@@ -6,7 +6,7 @@ using System.Collections;
 namespace SinGooCMS.Utility
 {
     /// <summary>
-    /// “Ï≥£–≈œ¢∏Ò ΩªØ
+    /// ÂºÇÂ∏∏‰ø°ÊÅØÊ†ºÂºèÂåñ
     /// </summary>
     public class ExceptionUtils
     {

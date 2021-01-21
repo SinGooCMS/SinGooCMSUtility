@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.International.Converters.PinYinConverter;
@@ -8,14 +8,14 @@ using SinGooCMS.Utility.Extension;
 namespace SinGooCMS.Utility
 {
     /// <summary>
-    /// ×Ö·û´®´¦Àí
+    /// å­—ç¬¦ä¸²å¤„ç†
     /// </summary>
     public static class StringUtils
     {
-        #region »ñÈ¡ºº×ÖÆ´ÒôµÄµÚÒ»¸ö×ÖÄ¸
+        #region è·å–æ±‰å­—æ‹¼éŸ³çš„ç¬¬ä¸€ä¸ªå­—æ¯
 
         /// <summary>
-        /// »ñÈ¡ºº×ÖÆ´ÒôµÄÊ××ÖÄ¸
+        /// è·å–æ±‰å­—æ‹¼éŸ³çš„é¦–å­—æ¯
         /// </summary>
         /// <param name="strText"></param>
         /// <returns></returns>
@@ -31,7 +31,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// »ñÈ¡ºº×ÖÆ´Òô
+        /// è·å–æ±‰å­—æ‹¼éŸ³
         /// </summary>
         /// <param name="strText"></param>
         /// <returns></returns>
@@ -42,7 +42,7 @@ namespace SinGooCMS.Utility
             strText.ToCharArray().ForEach((p) =>
             {
                 if (!ChineseChar.IsValidChar(p))
-                    builder.Append(p.ToString()); //²»ÊÇÓĞĞ§µÄºº×Ö£¬Ô­×ÖÊä³ö
+                    builder.Append(p.ToString()); //ä¸æ˜¯æœ‰æ•ˆçš„æ±‰å­—ï¼ŒåŸå­—è¾“å‡º
                 else
                 {
                     var chineseChar = new ChineseChar(p);
@@ -61,34 +61,34 @@ namespace SinGooCMS.Utility
 
         #endregion
 
-        #region ¼ò·±×ª»»
+        #region ç®€ç¹è½¬æ¢
 
         /// <summary> 
-        /// ¼òÌå×ª»»Îª·±Ìå
+        /// ç®€ä½“è½¬æ¢ä¸ºç¹ä½“
         /// </summary> 
-        /// <param name="str">¼òÌå×Ö</param> 
-        /// <returns>·±Ìå×Ö</returns> 
+        /// <param name="str">ç®€ä½“å­—</param> 
+        /// <returns>ç¹ä½“å­—</returns> 
         public static string GetTraditional(string str)
         {
-            return ChineseConverter.Convert(str, ChineseConversionDirection.SimplifiedToTraditional);//×ª·±Ìå
+            return ChineseConverter.Convert(str, ChineseConversionDirection.SimplifiedToTraditional);//è½¬ç¹ä½“
         }
 
         /// <summary> 
-        /// ·±Ìå×ª»»Îª¼òÌå
+        /// ç¹ä½“è½¬æ¢ä¸ºç®€ä½“
         /// </summary> 
-        /// <param name="str">·±Ìå×Ö</param> 
-        /// <returns>¼òÌå×Ö</returns> 
+        /// <param name="str">ç¹ä½“å­—</param> 
+        /// <returns>ç®€ä½“å­—</returns> 
         public static string GetSimplified(string str)
         {
-            return ChineseConverter.Convert(str, ChineseConversionDirection.TraditionalToSimplified);//×ª¼òÌå
+            return ChineseConverter.Convert(str, ChineseConversionDirection.TraditionalToSimplified);//è½¬ç®€ä½“
         }
 
         #endregion
 
-        #region ½ØÈ¡×Ö·û´®
+        #region æˆªå–å­—ç¬¦ä¸²
 
         /// <summary>
-        /// ½ØÈ¡×Ö·û´®
+        /// æˆªå–å­—ç¬¦ä¸²
         /// </summary>
         /// <param name="sourceStr"></param>
         /// <param name="len"></param>
@@ -103,7 +103,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ½ØÈ¡ÖĞ¼äÒ»¶Î×Ö·û´®
+        /// æˆªå–ä¸­é—´ä¸€æ®µå­—ç¬¦ä¸²
         /// </summary>
         /// <param name="source"></param>
         /// <param name="begin"></param>
@@ -118,7 +118,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ·µ»Ø×Ö·û´®ÕæÊµ³¤¶È, 1¸öºº×Ö³¤¶ÈÎª2
+        /// è¿”å›å­—ç¬¦ä¸²çœŸå®é•¿åº¦, 1ä¸ªæ±‰å­—é•¿åº¦ä¸º2
         /// </summary>
         /// <returns></returns>
         public static int GetStringLength(string str) =>
@@ -126,10 +126,10 @@ namespace SinGooCMS.Utility
 
         #endregion
 
-        #region ´¦Àí×Ö·û        
+        #region å¤„ç†å­—ç¬¦        
 
         /// <summary>
-        /// Ñ¹ËõHTML
+        /// å‹ç¼©HTML
         /// </summary>
         /// <returns></returns>
         public static string Compress(string strHTML)
@@ -142,7 +142,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// Ìæ»»sqlÓï¾äÖĞµÄÓĞÎÊÌâ·ûºÅ
+        /// æ›¿æ¢sqlè¯­å¥ä¸­çš„æœ‰é—®é¢˜ç¬¦å·
         /// </summary>
         public static string ChkSQL(string str)
         {
@@ -151,10 +151,10 @@ namespace SinGooCMS.Utility
 
         #endregion
 
-        #region ÕıÔò·Ö¸î
+        #region æ­£åˆ™åˆ†å‰²
 
         /// <summary>
-        /// ÔÚÓÉÕıÔò±í´ïÊ½Ä£Ê½¶¨ÒåµÄÎ»ÖÃ²ğ·ÖÊäÈë×Ö·û´®¡£
+        /// åœ¨ç”±æ­£åˆ™è¡¨è¾¾å¼æ¨¡å¼å®šä¹‰çš„ä½ç½®æ‹†åˆ†è¾“å…¥å­—ç¬¦ä¸²ã€‚
         /// </summary>
         /// <param name="pattern"></param>
         /// <param name="input"></param>
@@ -167,25 +167,32 @@ namespace SinGooCMS.Utility
 
         #endregion
 
-        #region Ëæ»úÊı
+        #region éšæœºæ•°
 
         /// <summary>
-        /// Éú³ÉÒ»¸öĞÂµÄÎÄ¼şÃû
+        /// ç”Ÿæˆä¸€ä¸ªæ–°çš„æ–‡ä»¶å
         /// </summary>
         /// <returns></returns>
         public static string GetNewFileName() =>
             DateTime.Now.ToString("yyyyMMddffff") + GetRandomString(8);
 
+        /// <summary>
+        /// ç”Ÿæˆä¸€ä¸ªå…¨æ•°å­—éšæœºæ•°(é»˜è®¤10ä½)ï¼Œå¯ä»¥ç”¨æ¥ç”Ÿæˆ6ä½éªŒè¯ç 
+        /// </summary>
+        /// <returns></returns>
+        public static string GetRandomNumber(int length = 10) =>
+            GetRandomString(length, "", true, false, false, false);
+
         ///<summary>
-        ///Éú³ÉËæ»ú×Ö·û´® 
+        ///ç”Ÿæˆéšæœºå­—ç¬¦ä¸² 
         ///</summary>
-        ///<param name="length">Ä¿±ê×Ö·û´®µÄ³¤¶È</param>
-        ///<param name="custom">Òª°üº¬µÄ×Ô¶¨Òå×Ö·û£¬Ö±½ÓÊäÈëÒª°üº¬µÄ×Ö·ûÁĞ±í</param>
-        ///<param name="useNum">ÊÇ·ñ°üº¬Êı×Ö£¬1=°üº¬£¬Ä¬ÈÏÎª°üº¬</param>
-        ///<param name="useLow">ÊÇ·ñ°üº¬Ğ¡Ğ´×ÖÄ¸£¬1=°üº¬£¬Ä¬ÈÏÎª°üº¬</param>
-        ///<param name="useUpp">ÊÇ·ñ°üº¬´óĞ´×ÖÄ¸£¬1=°üº¬£¬Ä¬ÈÏÎª°üº¬</param>
-        ///<param name="useSpe">ÊÇ·ñ°üº¬ÌØÊâ×Ö·û£¬1=°üº¬£¬Ä¬ÈÏÎª²»°üº¬</param>        
-        ///<returns>Ö¸¶¨³¤¶ÈµÄËæ»ú×Ö·û´®</returns>
+        ///<param name="length">ç›®æ ‡å­—ç¬¦ä¸²çš„é•¿åº¦</param>
+        ///<param name="custom">è¦åŒ…å«çš„è‡ªå®šä¹‰å­—ç¬¦ï¼Œç›´æ¥è¾“å…¥è¦åŒ…å«çš„å­—ç¬¦åˆ—è¡¨</param>
+        ///<param name="useNum">æ˜¯å¦åŒ…å«æ•°å­—ï¼Œ1=åŒ…å«ï¼Œé»˜è®¤ä¸ºåŒ…å«</param>
+        ///<param name="useLow">æ˜¯å¦åŒ…å«å°å†™å­—æ¯ï¼Œ1=åŒ…å«ï¼Œé»˜è®¤ä¸ºåŒ…å«</param>
+        ///<param name="useUpp">æ˜¯å¦åŒ…å«å¤§å†™å­—æ¯ï¼Œ1=åŒ…å«ï¼Œé»˜è®¤ä¸ºåŒ…å«</param>
+        ///<param name="useSpe">æ˜¯å¦åŒ…å«ç‰¹æ®Šå­—ç¬¦ï¼Œ1=åŒ…å«ï¼Œé»˜è®¤ä¸ºä¸åŒ…å«</param>        
+        ///<returns>æŒ‡å®šé•¿åº¦çš„éšæœºå­—ç¬¦ä¸²</returns>
         public static string GetRandomString(int length = 10, string custom = "", bool useNum = true, bool useLow = true, bool useUpp = true, bool useSpe = false)
         {
             byte[] b = new byte[4];
@@ -210,7 +217,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// Éú³ÉGUID
+        /// ç”ŸæˆGUID
         /// </summary>
         /// <returns></returns>
         public static string GetGUID()
@@ -219,10 +226,10 @@ namespace SinGooCMS.Utility
         }
         #endregion
 
-        #region ·µ»Ø·ÖÀàÇ°×º
+        #region è¿”å›åˆ†ç±»å‰ç¼€
 
         /// <summary>
-        /// ·µ»Ø¿Õ¸ñ
+        /// è¿”å›ç©ºæ ¼
         /// </summary>
         /// <param name="depth"></param>
         /// <returns></returns>
@@ -237,7 +244,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ·µ»Ø·ÖÀàÇ°×º
+        /// è¿”å›åˆ†ç±»å‰ç¼€
         /// </summary>
         /// <param name="intDept"></param>
         /// <param name="boolIsEnd"></param>
@@ -251,17 +258,17 @@ namespace SinGooCMS.Utility
                 builder.Append(ch);
             }
             if (boolIsEnd)
-                builder.Append("©¸");
+                builder.Append("â””");
             else
-                builder.Append("©À");
+                builder.Append("â”œ");
 
             return builder.ToString();
         }
         #endregion                
 
-        #region Éú³É±àºÅ
+        #region ç”Ÿæˆç¼–å·
         /// <summary>
-        /// Éú³É±àºÅ${year}${month}${day}${hour}${minute}${second}${millisecond}${rnd}
+        /// ç”Ÿæˆç¼–å·${year}${month}${day}${hour}${minute}${second}${millisecond}${rnd}
         /// </summary>
         /// <param name="SNFormat"></param>
         /// <returns></returns>
@@ -274,13 +281,13 @@ namespace SinGooCMS.Utility
         }
         #endregion
 
-        #region Éú³ÉuriµØÖ·
+        #region ç”Ÿæˆuriåœ°å€
 
         /// <summary>
-        /// Éú³ÉuriµØÖ·
+        /// ç”Ÿæˆuriåœ°å€
         /// </summary>
-        /// <param name="parameters">²ÎÊı</param>
-        /// <param name="protocol">Ğ­Òé http:// https:// ftp://</param>
+        /// <param name="parameters">å‚æ•°</param>
+        /// <param name="protocol">åè®® http:// https:// ftp://</param>
         /// <returns></returns>
         public static Uri GenerateUri(string[] parameters, string protocol = "http://")
         {

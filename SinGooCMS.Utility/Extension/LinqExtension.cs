@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,14 +7,14 @@ using System.Collections.Generic;
 namespace SinGooCMS.Utility.Extension
 {
     /// <summary>
-    /// linqÀ©Õ¹·½·¨
+    /// linqæ‰©å±•æ–¹æ³•
     /// </summary>
     public static class LinqExtension
     {
-        #region order by ×Ö·û´®×ª linq
+        #region order by å­—ç¬¦ä¸²è½¬ linq
 
         /// <summary>
-        /// ¶à¸öOrderByÓÃ¶ººÅ¸ô¿ª£¬exp:"Sort asc,AutoID desc"
+        /// å¤šä¸ªOrderByç”¨é€—å·éš”å¼€ï¼Œexp:"Sort asc,AutoID desc"
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
@@ -48,7 +48,7 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// ¶à¸öOrderByÓÃ¶ººÅ¸ô¿ª£¬exp:"Sort asc,AutoID desc"
+        /// å¤šä¸ªOrderByç”¨é€—å·éš”å¼€ï¼Œexp:"Sort asc,AutoID desc"
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
@@ -82,7 +82,7 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// ÕıĞòÅÅĞòµ¥¸ö
+        /// æ­£åºæ’åºå•ä¸ª
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
@@ -98,7 +98,7 @@ namespace SinGooCMS.Utility.Extension
             return (IQueryable<T>)genericMethod.Invoke(null, new object[] { query, expr });
         }
         /// <summary>
-        /// ÕıĞòÅÅĞòµ¥¸ö£¨·ÇÊ×¸ö£©
+        /// æ­£åºæ’åºå•ä¸ªï¼ˆéé¦–ä¸ªï¼‰
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
@@ -114,7 +114,7 @@ namespace SinGooCMS.Utility.Extension
             return (IQueryable<T>)genericMethod.Invoke(null, new object[] { query, expr });
         }
         /// <summary>
-        /// ·´ĞòÅÅĞòµ¥¸ö
+        /// ååºæ’åºå•ä¸ª
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
@@ -130,7 +130,7 @@ namespace SinGooCMS.Utility.Extension
             return (IQueryable<T>)genericMethod.Invoke(null, new object[] { query, expr });
         }
         /// <summary>
-        /// ·´ĞòÅÅĞòµ¥¸ö£¨·ÇÊ×¸ö£©
+        /// ååºæ’åºå•ä¸ªï¼ˆéé¦–ä¸ªï¼‰
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
@@ -167,27 +167,27 @@ namespace SinGooCMS.Utility.Extension
 
         #endregion
 
-        #region ÆäËüÀ©Õ¹·½·¨
+        #region å…¶å®ƒæ‰©å±•æ–¹æ³•
 
         /// <summary>
-        /// ÓëÁ¬½Ó
+        /// ä¸è¿æ¥
         /// </summary>
-        /// <typeparam name="T">ÀàĞÍ</typeparam>
-        /// <param name="left">×óÌõ¼ş</param>
-        /// <param name="right">ÓÒÌõ¼ş</param>
-        /// <returns>ĞÂ±í´ïÊ½</returns>
+        /// <typeparam name="T">ç±»å‹</typeparam>
+        /// <param name="left">å·¦æ¡ä»¶</param>
+        /// <param name="right">å³æ¡ä»¶</param>
+        /// <returns>æ–°è¡¨è¾¾å¼</returns>
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
             return CombineLambdas(left, right, ExpressionType.AndAlso);
         }
 
         /// <summary>
-        /// »òÁ¬½Ó
+        /// æˆ–è¿æ¥
         /// </summary>
-        /// <typeparam name="T">ÀàĞÍ</typeparam>
-        /// <param name="left">×óÌõ¼ş</param>
-        /// <param name="right">ÓÒÌõ¼ş</param>
-        /// <returns>ĞÂ±í´ïÊ½</returns>
+        /// <typeparam name="T">ç±»å‹</typeparam>
+        /// <param name="left">å·¦æ¡ä»¶</param>
+        /// <param name="right">å³æ¡ä»¶</param>
+        /// <returns>æ–°è¡¨è¾¾å¼</returns>
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
             return CombineLambdas(left, right, ExpressionType.OrElse);
@@ -213,7 +213,7 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// È¡×î´óÖµ
+        /// å–æœ€å¤§å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
@@ -223,7 +223,7 @@ namespace SinGooCMS.Utility.Extension
         public static TResult MaxOrDefault<TSource, TResult>(this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector) => source.Select(selector).OrderByDescending(_ => _).FirstOrDefault();
 
         /// <summary>
-        /// È¡×î´óÖµ
+        /// å–æœ€å¤§å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>
@@ -231,7 +231,7 @@ namespace SinGooCMS.Utility.Extension
         public static TSource MaxOrDefault<TSource>(this IQueryable<TSource> source) => source.OrderByDescending(_ => _).FirstOrDefault();
 
         /// <summary>
-        /// È¡×î´óÖµ
+        /// å–æœ€å¤§å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
@@ -241,7 +241,7 @@ namespace SinGooCMS.Utility.Extension
         public static TResult MaxOrDefault<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector) => source.Select(selector).OrderByDescending(_ => _).FirstOrDefault();
 
         /// <summary>
-        /// È¡×î´óÖµ
+        /// å–æœ€å¤§å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>
@@ -249,7 +249,7 @@ namespace SinGooCMS.Utility.Extension
         public static TSource MaxOrDefault<TSource>(this IEnumerable<TSource> source) => source.OrderByDescending(_ => _).FirstOrDefault();
 
         /// <summary>
-        /// È¡×îĞ¡Öµ
+        /// å–æœ€å°å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
@@ -259,7 +259,7 @@ namespace SinGooCMS.Utility.Extension
         public static TResult MinOrDefault<TSource, TResult>(this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector) => source.Select(selector).OrderBy(_ => _).FirstOrDefault();
 
         /// <summary>
-        /// È¡×îĞ¡Öµ
+        /// å–æœ€å°å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>
@@ -267,7 +267,7 @@ namespace SinGooCMS.Utility.Extension
         public static TSource MinOrDefault<TSource>(this IQueryable<TSource> source) => source.OrderBy(_ => _).FirstOrDefault();
 
         /// <summary>
-        /// È¡×îĞ¡Öµ
+        /// å–æœ€å°å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
@@ -277,7 +277,7 @@ namespace SinGooCMS.Utility.Extension
         public static TResult MinOrDefault<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector) => source.Select(selector).OrderBy(_ => _).FirstOrDefault();
 
         /// <summary>
-        /// È¡×îĞ¡Öµ
+        /// å–æœ€å°å€¼
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>

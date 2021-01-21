@@ -7,6 +7,7 @@ using System.Net;
 using System.Linq;
 using SinGooCMS.Utility.Extension;
 using System.Net.NetworkInformation;
+using System.Net.Http;
 
 namespace SinGooCMS.Utility
 {
@@ -28,7 +29,6 @@ namespace SinGooCMS.Utility
         {
             string reqCookie = string.Empty;
             string resCookie = string.Empty;
-
             return HttpGet(strUrl, timeOut, encodingType, ref reqCookie, ref resCookie);
         }
 

@@ -44,6 +44,26 @@ namespace SinGooCMS.Utility.Extension
         #endregion AsyncForEach
 
         /// <summary>
+        /// 打乱集合元素顺序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr"></param>
+        /// <param name="multiple">对于元素很少的集合，可以通过升级倍数来提升随机率，默认1倍</param>
+        /// <returns></returns>
+        public static IEnumerable<T> RandomArray<T>(this IEnumerable<T> arr, int multiple = 1)
+        {
+            List<T> temp = new T[arr.Count() * multiple].ToList();
+            foreach (var l in arr)
+            {
+                var rd = new Random(Guid.NewGuid().GetHashCode());
+                var index = rd.Next(0, arr.Count() * multiple);
+                temp.Insert(index, l);
+            }
+            temp.RemoveAll(new Predicate<T>((t) => { return !arr.Contains(t); }));
+            return temp;
+        }
+
+        /// <summary>
         /// 按字段去重
         /// </summary>
         /// <typeparam name="TSource"></typeparam>

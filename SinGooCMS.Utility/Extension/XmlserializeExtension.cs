@@ -69,7 +69,7 @@ namespace SinGooCMS.Utility.Extension
     /// <summary>
     /// 转xml时编码为UTF8
     /// </summary>
-    public class StringUTF8Writer : System.IO.StringWriter
+    internal class StringUTF8Writer : System.IO.StringWriter
     {
         public StringUTF8Writer(StringBuilder builder)
             : base(builder)

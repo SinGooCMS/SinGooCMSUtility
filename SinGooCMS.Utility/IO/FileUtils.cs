@@ -1,22 +1,20 @@
-using System;
+ï»¿using System;
 using System.Text;
 using System.IO;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SinGooCMS.Utility
 {
     /// <summary>
-    /// ÎÄ¼ş¹ÜÀí¹¤¾ß
+    /// æ–‡ä»¶ç®¡ç†å·¥å…·
     /// </summary>
     public class FileUtils
     {
-        #region ÎÄ¼ş²Ù×÷        
+        #region æ–‡ä»¶æ“ä½œ        
 
         /// <summary>
-        /// ´´½¨ÎÄ¼ş
+        /// åˆ›å»ºæ–‡ä»¶
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="fileContent"></param>
@@ -24,7 +22,7 @@ namespace SinGooCMS.Utility
             CreateFile(absolutePath, fileContent, "utf-8");
 
         /// <summary>
-        /// ´´½¨ÎÄ¼ş
+        /// åˆ›å»ºæ–‡ä»¶
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="fileContent"></param>
@@ -39,7 +37,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// Òì²½´´½¨ÎÄ¼ş
+        /// å¼‚æ­¥åˆ›å»ºæ–‡ä»¶
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="fileContent"></param>
@@ -54,7 +52,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ¶ÁÈ¡ÎÄ¼şÄÚÈİ
+        /// è¯»å–æ–‡ä»¶å†…å®¹
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="encoding"></param>
@@ -74,7 +72,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// Òì²½¶ÁÈ¡ÎÄ¼şÄÚÈİ
+        /// å¼‚æ­¥è¯»å–æ–‡ä»¶å†…å®¹
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="encoding"></param>
@@ -95,7 +93,7 @@ namespace SinGooCMS.Utility
 
 
         /// <summary>
-        /// Ğ´ÎÄ¼ş
+        /// å†™æ–‡ä»¶
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="fileContent"></param>
@@ -116,7 +114,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// Òì²½Ğ´ÎÄ¼ş
+        /// å¼‚æ­¥å†™æ–‡ä»¶
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="fileContent"></param>
@@ -137,7 +135,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// É¾³ıÎÄ¼ş
+        /// åˆ é™¤æ–‡ä»¶
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <returns></returns>
@@ -148,12 +146,12 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ÖØÃüÃûÎÄ¼ş
+        /// é‡å‘½åæ–‡ä»¶
         /// </summary>
-        /// <param name="absolutePath">ÎÄ¼şËùÔÚµÄÄ¿Â¼,²»Òª×îºóÄÇ¸öĞ±¸ÜÀıÈçE:\\Dir\\GG</param>
-        /// <param name="oldName">Ô­Ãû³Æ</param>
-        /// <param name="newName">ĞŞ¸ÄµÄÃû³Æ</param>
-        /// <param name="fileType">ÎÄ¼şÀàĞÍ 0ÎªÎÄ¼ş¼Ğ 1ÊÇÎÄ¼ş</param>
+        /// <param name="absolutePath">æ–‡ä»¶æ‰€åœ¨çš„ç›®å½•,ä¸è¦æœ€åé‚£ä¸ªæ–œæ ä¾‹å¦‚E:\\Dir\\GG</param>
+        /// <param name="oldName">åŸåç§°</param>
+        /// <param name="newName">ä¿®æ”¹çš„åç§°</param>
+        /// <param name="fileType">æ–‡ä»¶ç±»å‹ 0ä¸ºæ–‡ä»¶å¤¹ 1æ˜¯æ–‡ä»¶</param>
         /// <returns></returns>
         public static void ReNameFile(string absolutePath, string oldName, string newName, int fileType)
         {
@@ -169,14 +167,14 @@ namespace SinGooCMS.Utility
             }
         }
         /// <summary>
-        /// »ñÈ¡ÎÄ¼şÀ©Õ¹Ãû
+        /// è·å–æ–‡ä»¶æ‰©å±•å
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
         public static string GetExtension(string fileName) => System.IO.Path.GetExtension(fileName);
 
         /// <summary>
-        /// »ñÈ¡ÎÄ¼ş´óĞ¡
+        /// è·å–æ–‡ä»¶å¤§å°
         /// </summary>
         /// <param name="length"></param>
         /// <param name="unit"></param>
@@ -184,7 +182,7 @@ namespace SinGooCMS.Utility
         public static string GetFileSize(decimal length, string unit = null)
         {
             decimal num = 0m;
-            if (unit != null) //Ö¸¶¨µ¥Î»
+            if (unit != null) //æŒ‡å®šå•ä½
             {
                 switch (unit)
                 {
@@ -200,7 +198,7 @@ namespace SinGooCMS.Utility
                         break;
                 }
             }
-            else //²»Ö¸¶¨µ¥Î»
+            else //ä¸æŒ‡å®šå•ä½
             {
                 if (length >= 1024m * 1024m * 1024m)
                 {
@@ -223,10 +221,10 @@ namespace SinGooCMS.Utility
         }
         #endregion
 
-        #region Ä¿Â¼²Ù×÷
+        #region ç›®å½•æ“ä½œ
 
         /// <summary>
-        /// ´´½¨ÎÄ¼ş¼Ğ
+        /// åˆ›å»ºæ–‡ä»¶å¤¹
         /// </summary>
         /// <param name="absoluteDir"></param>
         /// <returns></returns>
@@ -239,7 +237,7 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// É¾³ıÎÄ¼ş¼Ğ
+        /// åˆ é™¤æ–‡ä»¶å¤¹
         /// </summary>
         /// <param name="absoluteDir"></param>
         /// <returns></returns>
@@ -250,27 +248,27 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// »ñÈ¡Ä¿Â¼ÈİÁ¿
+        /// è·å–ç›®å½•å®¹é‡
         /// </summary>
         /// <param name="absoluteDir"></param>
         /// <returns></returns>
         public static long GetDirectoryLength(string absoluteDir)
         {
-            //ÅĞ¶Ï¸ø¶¨µÄÂ·¾¶ÊÇ·ñ´æÔÚ,Èç¹û²»´æÔÚÔòÍË³ö
+            //åˆ¤æ–­ç»™å®šçš„è·¯å¾„æ˜¯å¦å­˜åœ¨,å¦‚æœä¸å­˜åœ¨åˆ™é€€å‡º
             if (!Directory.Exists(absoluteDir))
                 return 0;
             long len = 0;
 
-            //¶¨ÒåÒ»¸öDirectoryInfo¶ÔÏó
+            //å®šä¹‰ä¸€ä¸ªDirectoryInfoå¯¹è±¡
             DirectoryInfo di = new DirectoryInfo(absoluteDir);
 
-            //Í¨¹ıGetFiles·½·¨,»ñÈ¡diÄ¿Â¼ÖĞµÄËùÓĞÎÄ¼şµÄ´óĞ¡
+            //é€šè¿‡GetFilesæ–¹æ³•,è·å–diç›®å½•ä¸­çš„æ‰€æœ‰æ–‡ä»¶çš„å¤§å°
             foreach (FileInfo fi in di.GetFiles())
             {
                 len += fi.Length;
             }
 
-            //»ñÈ¡diÖĞËùÓĞµÄÎÄ¼ş¼Ğ,²¢´æµ½Ò»¸öĞÂµÄ¶ÔÏóÊı×éÖĞ,ÒÔ½øĞĞµİ¹é
+            //è·å–diä¸­æ‰€æœ‰çš„æ–‡ä»¶å¤¹,å¹¶å­˜åˆ°ä¸€ä¸ªæ–°çš„å¯¹è±¡æ•°ç»„ä¸­,ä»¥è¿›è¡Œé€’å½’
             DirectoryInfo[] dis = di.GetDirectories();
             if (dis.Length > 0)
             {
@@ -283,27 +281,27 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ¸´ÖÆÎÄ¼ş¼Ğ
+        /// å¤åˆ¶æ–‡ä»¶å¤¹
         /// </summary>
-        /// <param name="sourcesAbsoluteDir">Ô´Â·¾¶</param>
-        /// <param name="destAbsoluteDir">ĞÂÂ·¾¶</param>
+        /// <param name="sourcesAbsoluteDir">æºè·¯å¾„</param>
+        /// <param name="destAbsoluteDir">æ–°è·¯å¾„</param>
         private static void CopyFolder(string sourcesAbsoluteDir, string destAbsoluteDir)
         {
             DirectoryInfo dinfo = new DirectoryInfo(sourcesAbsoluteDir);
-            //×¢£¬ÕâÀïÃæ´«µÄÊÇÂ·¾¶£¬²¢²»ÊÇÎÄ¼ş£¬ËùÒÔ²»ÄÜ±£º¬´øºó×ºµÄÎÄ¼ş                
+            //æ³¨ï¼Œè¿™é‡Œé¢ä¼ çš„æ˜¯è·¯å¾„ï¼Œå¹¶ä¸æ˜¯æ–‡ä»¶ï¼Œæ‰€ä»¥ä¸èƒ½ä¿å«å¸¦åç¼€çš„æ–‡ä»¶                
             foreach (FileSystemInfo f in dinfo.GetFileSystemInfos())
             {
-                //Ä¿±êÂ·¾¶destName = Ä¿±êÎÄ¼ş¼ĞÂ·¾¶ + Ô­ÎÄ¼ş¼ĞÏÂµÄ×ÓÎÄ¼ş(»òÎÄ¼ş¼Ğ)Ãû×Ö                
-                //Path.Combine(string a ,string b) ÎªºÏ²¢Á½¸ö×Ö·û´®                     
+                //ç›®æ ‡è·¯å¾„destName = ç›®æ ‡æ–‡ä»¶å¤¹è·¯å¾„ + åŸæ–‡ä»¶å¤¹ä¸‹çš„å­æ–‡ä»¶(æˆ–æ–‡ä»¶å¤¹)åå­—                
+                //Path.Combine(string a ,string b) ä¸ºåˆå¹¶ä¸¤ä¸ªå­—ç¬¦ä¸²                     
                 String destName = Path.Combine(destAbsoluteDir, f.Name);
                 if (f is FileInfo)
                 {
-                    //Èç¹ûÊÇÎÄ¼ş¾Í¸´ÖÆ       
-                    File.Copy(f.FullName, destName, true);//true´ú±í¿ÉÒÔ¸²¸ÇÍ¬ÃûÎÄ¼ş                     
+                    //å¦‚æœæ˜¯æ–‡ä»¶å°±å¤åˆ¶       
+                    File.Copy(f.FullName, destName, true);//trueä»£è¡¨å¯ä»¥è¦†ç›–åŒåæ–‡ä»¶                     
                 }
                 else
                 {
-                    //Èç¹ûÊÇÎÄ¼ş¼Ğ¾Í´´½¨ÎÄ¼ş¼ĞÈ»ºó¸´ÖÆÈ»ºóµİ¹é¸´ÖÆ              
+                    //å¦‚æœæ˜¯æ–‡ä»¶å¤¹å°±åˆ›å»ºæ–‡ä»¶å¤¹ç„¶åå¤åˆ¶ç„¶åé€’å½’å¤åˆ¶              
                     Directory.CreateDirectory(destName);
                     CopyFolder(f.FullName, destName);
                 }
@@ -311,27 +309,27 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ¸´ÖÆÄ¿Â¼¼°Ä¿Â¼ÏÂËùÓĞÎÄ¼ş
+        /// å¤åˆ¶ç›®å½•åŠç›®å½•ä¸‹æ‰€æœ‰æ–‡ä»¶
         /// </summary>
         /// <param name="SourcePath"></param>
         /// <param name="DestinationPath"></param>
         public static void CopyDirectory(string SourcePath, string DestinationPath)
         {
-            //´´½¨Ä¿±êÄ¿Â¼
+            //åˆ›å»ºç›®æ ‡ç›®å½•
             if (!Directory.Exists(DestinationPath))
                 Directory.CreateDirectory(DestinationPath);
 
-            //´´½¨ËùÓĞ×ÓÄ¿Â¼
+            //åˆ›å»ºæ‰€æœ‰å­ç›®å½•
             foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
                 Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
 
-            //¸´ÖÆËùÓĞÎÄ¼ş ²¢¸²¸ÇÏÖÓĞµÄÎÄ¼ş
+            //å¤åˆ¶æ‰€æœ‰æ–‡ä»¶ å¹¶è¦†ç›–ç°æœ‰çš„æ–‡ä»¶
             foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
                 File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
         }
 
         /// <summary>
-        /// µİ¹é»ñÈ¡Ä¿Â¼ÏÂµÄËùÓĞÎÄ¼şĞÅÏ¢
+        /// é€’å½’è·å–ç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶ä¿¡æ¯
         /// </summary>
         /// <param name="absoluteDir"></param>
         /// <returns></returns>
@@ -349,19 +347,19 @@ namespace SinGooCMS.Utility
 
         #endregion     
 
-        #region ±¸·İÓë»Ö¸´
+        #region å¤‡ä»½ä¸æ¢å¤
 
         /// <summary>
-        /// ±¸·İÎÄ¼ş
+        /// å¤‡ä»½æ–‡ä»¶
         /// </summary>
-        /// <param name="sourceFileName">Ô´ÎÄ¼şÃû</param>
-        /// <param name="destFileName">Ä¿±êÎÄ¼şÃû</param>
-        /// <param name="overwrite">µ±Ä¿±êÎÄ¼ş´æÔÚÊ±ÊÇ·ñ¸²¸Ç</param>
-        /// <returns>²Ù×÷ÊÇ·ñ³É¹¦</returns>
+        /// <param name="sourceFileName">æºæ–‡ä»¶å</param>
+        /// <param name="destFileName">ç›®æ ‡æ–‡ä»¶å</param>
+        /// <param name="overwrite">å½“ç›®æ ‡æ–‡ä»¶å­˜åœ¨æ—¶æ˜¯å¦è¦†ç›–</param>
+        /// <returns>æ“ä½œæ˜¯å¦æˆåŠŸ</returns>
         public static bool BackupFile(string sourceFileName, string destFileName, bool overwrite)
         {
             if (!System.IO.File.Exists(sourceFileName))
-                throw new FileNotFoundException(sourceFileName + "ÎÄ¼ş²»´æÔÚ£¡");
+                throw new FileNotFoundException(sourceFileName + "æ–‡ä»¶ä¸å­˜åœ¨ï¼");
 
             if (!overwrite && System.IO.File.Exists(destFileName))
                 return false;
@@ -379,11 +377,11 @@ namespace SinGooCMS.Utility
 
 
         /// <summary>
-        /// ±¸·İÎÄ¼ş,µ±Ä¿±êÎÄ¼ş´æÔÚÊ±¸²¸Ç
+        /// å¤‡ä»½æ–‡ä»¶,å½“ç›®æ ‡æ–‡ä»¶å­˜åœ¨æ—¶è¦†ç›–
         /// </summary>
-        /// <param name="sourceFileName">Ô´ÎÄ¼şÃû</param>
-        /// <param name="destFileName">Ä¿±êÎÄ¼şÃû</param>
-        /// <returns>²Ù×÷ÊÇ·ñ³É¹¦</returns>
+        /// <param name="sourceFileName">æºæ–‡ä»¶å</param>
+        /// <param name="destFileName">ç›®æ ‡æ–‡ä»¶å</param>
+        /// <returns>æ“ä½œæ˜¯å¦æˆåŠŸ</returns>
         public static bool BackupFile(string sourceFileName, string destFileName)
         {
             return BackupFile(sourceFileName, destFileName, true);
@@ -391,23 +389,23 @@ namespace SinGooCMS.Utility
 
 
         /// <summary>
-        /// »Ö¸´ÎÄ¼ş
+        /// æ¢å¤æ–‡ä»¶
         /// </summary>
-        /// <param name="backupFileName">±¸·İÎÄ¼şÃû</param>
-        /// <param name="targetFileName">Òª»Ö¸´µÄÎÄ¼şÃû</param>
-        /// <param name="backupTargetFileName">Òª»Ö¸´ÎÄ¼şÔÙ´Î±¸·İµÄÃû³Æ,Èç¹ûÎªnull,Ôò²»ÔÙ±¸·İ»Ö¸´ÎÄ¼ş</param>
-        /// <returns>²Ù×÷ÊÇ·ñ³É¹¦</returns>
+        /// <param name="backupFileName">å¤‡ä»½æ–‡ä»¶å</param>
+        /// <param name="targetFileName">è¦æ¢å¤çš„æ–‡ä»¶å</param>
+        /// <param name="backupTargetFileName">è¦æ¢å¤æ–‡ä»¶å†æ¬¡å¤‡ä»½çš„åç§°,å¦‚æœä¸ºnull,åˆ™ä¸å†å¤‡ä»½æ¢å¤æ–‡ä»¶</param>
+        /// <returns>æ“ä½œæ˜¯å¦æˆåŠŸ</returns>
         public static bool RestoreFile(string backupFileName, string targetFileName, string backupTargetFileName)
         {
             try
             {
                 if (!System.IO.File.Exists(backupFileName))
-                    throw new FileNotFoundException(backupFileName + "ÎÄ¼ş²»´æÔÚ£¡");
+                    throw new FileNotFoundException(backupFileName + "æ–‡ä»¶ä¸å­˜åœ¨ï¼");
 
                 if (backupTargetFileName != null)
                 {
                     if (!System.IO.File.Exists(targetFileName))
-                        throw new FileNotFoundException(targetFileName + "ÎÄ¼ş²»´æÔÚ£¡ÎŞ·¨±¸·İ´ËÎÄ¼ş£¡");
+                        throw new FileNotFoundException(targetFileName + "æ–‡ä»¶ä¸å­˜åœ¨ï¼æ— æ³•å¤‡ä»½æ­¤æ–‡ä»¶ï¼");
                     else
                         System.IO.File.Copy(targetFileName, backupTargetFileName, true);
                 }
@@ -428,12 +426,12 @@ namespace SinGooCMS.Utility
 
         #endregion
 
-        #region ÎÄ¼şÁ÷            
+        #region æ–‡ä»¶æµ            
 
         /// <summary>
-        /// ¶ÁÎÄ¼şµ½Stream
+        /// è¯»æ–‡ä»¶åˆ°Stream
         /// </summary>
-        /// <param name="fileName">Ó²ÅÌÎÄ¼şÂ·¾¶</param>
+        /// <param name="fileName">ç¡¬ç›˜æ–‡ä»¶è·¯å¾„</param>
         /// <returns></returns>
         public static Stream ReadFileToStream(string fileName)
         {
@@ -443,9 +441,9 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ¶ÁÎÄ¼şµ½byte[]
+        /// è¯»æ–‡ä»¶åˆ°byte[]
         /// </summary>
-        /// <param name="fileName">Ó²ÅÌÎÄ¼şÂ·¾¶</param>
+        /// <param name="fileName">ç¡¬ç›˜æ–‡ä»¶è·¯å¾„</param>
         /// <returns></returns>
         public static byte[] ReadFileToBytes(string fileName)
         {
@@ -455,7 +453,7 @@ namespace SinGooCMS.Utility
             {
                 pFileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
                 BinaryReader r = new BinaryReader(pFileStream);
-                r.BaseStream.Seek(0, SeekOrigin.Begin);    //½«ÎÄ¼şÖ¸ÕëÉèÖÃµ½ÎÄ¼ş¿ª
+                r.BaseStream.Seek(0, SeekOrigin.Begin);    //å°†æ–‡ä»¶æŒ‡é’ˆè®¾ç½®åˆ°æ–‡ä»¶å¼€
                 bytes = r.ReadBytes((int)r.BaseStream.Length);
                 return bytes;
             }
