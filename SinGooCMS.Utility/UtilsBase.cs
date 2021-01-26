@@ -10,7 +10,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 工具底层，主要获取 http上下文 HttpContext。netfx从system.web中读取，core需要注入
     /// </summary>
-    internal sealed class UtilsBase
+    public sealed class UtilsBase
     {
 #if NETSTANDARD2_1
 

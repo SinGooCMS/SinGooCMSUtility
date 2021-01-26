@@ -30,6 +30,9 @@ namespace CoreWebTest.Controllers
 
             var builder = new StringBuilder("测试如下：\r\n");
 
+            //IP
+            builder.Append($"IP:{IPUtils.GetIP()}\r\n");
+
             //WebUtils
             builder.Append($"pid:{WebUtils.GetQueryInt("pid")}\r\n"); //?pid=1
             //全url

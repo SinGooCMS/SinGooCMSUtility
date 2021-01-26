@@ -20,12 +20,12 @@ namespace SinGooCMS.Utility
         {
             var ip = "0.0.0.0";
 #if NETSTANDARD2_1
-            if(UtilsBase.HttpContext!=null)
+            if (UtilsBase.HttpContext != null)
             {
                 ip = UtilsBase.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-                if (ip.ToString().IsNullOrEmpty())
+                if (ip.IsNullOrEmpty())
                 {
-                    ip = UtilsBase.HttpContext.Connection.RemoteIpAddress.ToString();
+                    ip = UtilsBase.HttpContext.Connection.RemoteIpAddress?.ToString();
                 }
             }
             else
@@ -48,7 +48,7 @@ namespace SinGooCMS.Utility
             }
 #endif
 
-            return ip;
+            return !ip.IsIP() ? "127.0.0.1" : ip;
         }
 
         /// <summary>

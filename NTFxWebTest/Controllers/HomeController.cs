@@ -15,6 +15,9 @@ namespace NTFxWebTest.Controllers
         {
             var builder = new StringBuilder("测试如下：<br/>\r\n");
 
+            //IP
+            builder.Append($"IP:{IPUtils.GetIP()}<br/>\r\n");
+
             //WebUtils
             builder.Append($"pid:{WebUtils.GetQueryInt("pid")}<br/>\r\n"); //?pid=1
             //全url
