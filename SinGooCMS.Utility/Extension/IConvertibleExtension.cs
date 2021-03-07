@@ -21,7 +21,7 @@ namespace SinGooCMS.Utility.Extension
             }
             catch
             {
-                return default;
+                return default(T);
             }
         }
     }

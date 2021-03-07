@@ -9,7 +9,7 @@ namespace SinGooCMS.Utility.Extension
     /// </summary>
     public static class DateTimeExtension
     {
-        #region 周一、周日
+        #region 周一、周日/每周第一天、每周最后一天    
 
         /// <summary>
         /// 计算周一的日期
@@ -19,7 +19,9 @@ namespace SinGooCMS.Utility.Extension
         public static DateTime GetMonday(this DateTime someDate)
         {
             var date = GetShortDate(someDate);
-            return date.AddDays(1 - Convert.ToInt32(date.DayOfWeek.ToString("d")));
+            return date.DayOfWeek == DayOfWeek.Sunday
+                ? date.AddDays(-6)
+                : date.AddDays(1 - Convert.ToInt32(date.DayOfWeek.ToString("d")));
         }
 
         /// <summary>
@@ -30,6 +32,31 @@ namespace SinGooCMS.Utility.Extension
         public static DateTime GetSunday(this DateTime someDate)
         {
             return someDate.GetMonday().AddDays(6);
+        }
+
+        /// <summary>
+        /// 获取周第一天（星期一）
+        /// </summary>
+        /// <param name="someDate"></param>
+        /// <param name="isCNRule">是否中国规则</param>
+        /// <returns></returns>
+        public static DateTime GetWeekFirstDay(this DateTime someDate, bool isCNRule = true)
+        {
+            var date = GetShortDate(someDate);
+            return date.DayOfWeek == DayOfWeek.Sunday && !isCNRule
+                ? date
+                : date.GetMonday(); //国外认为星期天是第一天，我们中国认为周一是第一天
+        }
+
+        /// <summary>
+        /// 获取周最后一天（星期日）
+        /// </summary>
+        /// <param name="someDate"></param>
+        /// <param name="isCNRule">是否中国规则</param>
+        /// <returns></returns>
+        public static DateTime GetWeekLastDay(this DateTime someDate, bool isCNRule = true)
+        {
+            return someDate.GetWeekFirstDay(isCNRule).AddDays(6);
         }
 
         #endregion
@@ -112,12 +139,16 @@ namespace SinGooCMS.Utility.Extension
         #region 本年第几周
 
         /// <summary>
-        /// 本年第几周
+        /// 本年第几周，当跨年时有2个值，isOnlyValue=true取新年值
         /// </summary>
-        /// <param name="someDate"></param>
+        /// <param name="someDate">日期</param>
+        /// <param name="isOnlyValue">是否唯一值</param>
         /// <returns></returns>
-        public static int WeekOfYear(this DateTime someDate)
+        public static int WeekOfYear(this DateTime someDate, bool isOnlyValue = false)
         {
+            if (isOnlyValue)
+                someDate = someDate.GetWeekLastDay();
+
             GregorianCalendar gc = new GregorianCalendar(GregorianCalendarTypes.USEnglish);
             int weekOfYear = gc.GetWeekOfYear(someDate, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
             return weekOfYear;
@@ -255,14 +286,14 @@ namespace SinGooCMS.Utility.Extension
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static double GetTotalSeconds(this in DateTime dt) => new DateTimeOffset(dt).ToUnixTimeSeconds();
+        public static double GetUnixTimeSeconds(this in DateTime dt) => new DateTimeOffset(dt).ToUnixTimeSeconds();
 
         /// <summary>
         /// 获取该时间相对于1970-01-01 00:00:00的毫秒数
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static double GetTotalMilliseconds(this in DateTime dt) => new DateTimeOffset(dt).ToUnixTimeMilliseconds();
+        public static double GetUnixTimeMilliseconds(this in DateTime dt) => new DateTimeOffset(dt).ToUnixTimeMilliseconds();
 
         /// <summary>
         /// 获取该时间相对于1970-01-01 00:00:00的微秒时间戳

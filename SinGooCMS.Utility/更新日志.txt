@@ -1,0 +1,11 @@
+﻿1）更新ObjectExtension扩展方法DeepClone
+2）ReflectionUtil 改成 ReflectionUtils
+3）DataTableExtension增加方法FindRow，增加方法RemoveEmptyRow
+4）扩展类DataTypeChangeExtension的原方法ToIntArray(this string ids)增加参数ToIntArray(this string ids, char splitter = ',')
+5）更新ZipUtils方法Zip，解决压缩时中文文件名乱码的问题
+6）优化Linq扩展类
+7）扩展类DateTimeExtension修改方法WeekOfYear(this DateTime someDate, bool isOnlyValue = true)，增加isOnlyValue用于返回唯一值
+8）优化EPPlusUtils的Read方法，可以读出日期格式数据，优化方法Export，可导出日期格式及设置标题样式。
+9）优化工具类WebUtils
+10）解决扩展类DataTypeChangeExtension小数转整数的BUG，整数转小数时将截断小数部分
+11）优化扩展类ImageExtension，增加等比压缩方法CompressRate，等宽压缩方法CompressWidth，等高压缩方法CompressHeight

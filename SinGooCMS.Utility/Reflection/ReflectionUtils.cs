@@ -6,7 +6,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 反射操作
     /// </summary>
-    public static class ReflectionUtil
+    public sealed class ReflectionUtils
     {
         #region 通过dll文件创建实例
 
@@ -49,7 +49,7 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// 读取类型
         /// </summary>
-        /// <param name="assemblyFile">ddl文件全路径</param>
+        /// <param name="assemblyFile">ddl文件全路径 如 F:\SinGooCMS.Ado.dll</param>
         /// <param name="fullName">类限定名 如 SinGooCMS.Ado.DbAccess.SqlServerAccess</param>
         /// <returns></returns>
         public static Type GetType(string assemblyFile, string fullName)
@@ -58,6 +58,6 @@ namespace SinGooCMS.Utility
             return tempAssembly.GetType(fullName);
         }
 
-        #endregion 创建实例
+        #endregion
     }
 }

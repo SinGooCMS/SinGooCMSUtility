@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SinGooCMS.Utility.Extension
 {
     /// <summary>
-    /// 数据类型转换
+    /// 数据类型转换,利用TryParse判断是否可转换，如果能则返回转换后的值，否则返回默认值
     /// </summary>
     public static class DataTypeChangeExtension
     {
@@ -23,6 +21,10 @@ namespace SinGooCMS.Utility.Extension
         {
             if (thisValue != null)
             {
+                //判断是否小数
+                if (thisValue.ToString().IsDecimal())
+                    return (byte)(thisValue.ToDecimal());
+
                 if (byte.TryParse(thisValue.ToString(), out byte result))
                     return result;
             }
@@ -40,6 +42,10 @@ namespace SinGooCMS.Utility.Extension
         {
             if (thisValue != null)
             {
+                //判断是否小数
+                if (thisValue.ToString().IsDecimal())
+                    return (short)(thisValue.ToDecimal());
+
                 if (Int16.TryParse(thisValue.ToString(), out short result))
                     return result;
             }
@@ -48,7 +54,7 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// 转化为整型 注意转int不要使用此方法，直接用(int)floatVal
+        /// 转化为整型，如果是小数，将截断小数部分
         /// </summary>
         /// <param name="thisValue"></param>
         /// <param name="defValue"></param>
@@ -57,6 +63,11 @@ namespace SinGooCMS.Utility.Extension
         {
             if (thisValue != null)
             {
+                //判断是否小数
+                if (thisValue.ToString().IsDecimal())
+                    return (int)(thisValue.ToDecimal());
+
+                //非小数
                 if (Int32.TryParse(thisValue.ToString(), out int result))
                     return result;
             }
@@ -74,6 +85,10 @@ namespace SinGooCMS.Utility.Extension
         {
             if (thisValue != null)
             {
+                //判断是否小数
+                if (thisValue.ToString().IsDecimal())
+                    return (long)(thisValue.ToDecimal());
+
                 if (Int64.TryParse(thisValue.ToString(), out long result))
                     return result;
             }
@@ -181,18 +196,19 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// ids字符串转整型数组
+        /// ids字符串转整型数组,如 "1,2,3" 转 int[]{1,2,3}
         /// </summary>
-        /// <param name="ids"></param>
+        /// <param name="ids">带分隔符的字符串</param>
+        /// <param name="splitter">分隔符</param>
         /// <returns></returns>
-        public static int[] ToIntArray(this string ids)
+        public static int[] ToIntArray(this string ids, char splitter = ',')
         {
             var result = new List<int>();
 
             if (!ids.IsNullOrEmpty())
             {
-                string[] arr = ids.Split(',');
-                foreach(string item in arr)
+                string[] arr = ids.Split(splitter);
+                foreach (string item in arr)
                 {
                     if (int.TryParse(item, out int outValue))
                     {

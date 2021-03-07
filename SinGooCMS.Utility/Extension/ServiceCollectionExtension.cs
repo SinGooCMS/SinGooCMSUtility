@@ -13,7 +13,7 @@ namespace SinGooCMS.Utility.Extension
     public static class ServiceCollectionExtension
     {
         /// <summary>
-        /// 注入HttpContext静态对象，方便在任意地方获取HttpContext，services.AddHttpContextAccessor();
+        /// 注入HttpContext静态对象，方便在任意地方获取HttpContext，services.AddStaticHttpContext();
         /// </summary>
         /// <param name="services"></param>
         public static void AddStaticHttpContext(this IServiceCollection services)

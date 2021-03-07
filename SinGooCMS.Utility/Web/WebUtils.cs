@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Web;
 using SinGooCMS.Utility.Extension;
@@ -9,9 +11,60 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// web工具
     /// </summary>
-    public class WebUtils
+    public sealed class WebUtils
     {
         #region query
+
+        /// <summary>
+        /// 读取Query值，默认只有一个值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="defaultVal"></param>
+        /// <returns></returns>
+        public static T GetQueryVal<T>(string key, T defaultVal = default(T))
+        {
+            var cols = GetQueryVals<T>(key);
+            return cols == null
+                ? defaultVal
+                : cols.First();
+        }
+
+        /// <summary>
+        /// 读取Query值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetQueryVals<T>(string key)
+        {
+            var lst = new List<T>();
+#if NETSTANDARD2_1
+            if (UtilsBase.HttpContext != null
+                && UtilsBase.HttpContext.Request != null
+                && UtilsBase.HttpContext.Request.Query.ContainsKey(key))
+            {
+                var cols = UtilsBase.HttpContext.Request.Query[key];
+                for (var i = 0; i < cols.Count; i++)
+                    lst.Add(HttpUtility.UrlDecode(cols[i]).Trim().To<T>()); //中文需要URL解码
+
+                return lst;
+            }
+#else
+            if (UtilsBase.HttpContext != null && UtilsBase.HttpContext.Request.QueryString[key] != null)
+            {
+                //中文需要URL解码
+                string queryVal = HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.QueryString[key]).Trim();
+                queryVal.Split(',').ForEach(item =>
+                {
+                    lst.Add(item.To<T>());
+                });
+
+                return lst;
+            }
+#endif
+            return null;
+        }
 
         /// <summary>
         /// 读取query值
@@ -19,6 +72,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defalutValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static string GetQueryString(string key, string defalutValue = "")
         {
 #if NETSTANDARD2_1
@@ -28,14 +82,14 @@ namespace SinGooCMS.Utility
                 && !string.IsNullOrEmpty(UtilsBase.HttpContext.Request.Query[key].ToString()))
             {
                 //这里中文需要URL解码
-                return HttpUtility.HtmlDecode(HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.Query[key])).Trim();
+                return HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.Query[key]).Trim();
             }
 #else
             if (UtilsBase.HttpContext != null && UtilsBase.HttpContext.Request.QueryString[key] != null)
             {
                 //这里中文需要URL解码
-                return HttpUtility.HtmlDecode(HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.QueryString[key])).Trim();
-            }            
+                return HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.QueryString[key]).Trim();
+            }
 #endif
 
             return defalutValue;
@@ -47,6 +101,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static int GetQueryInt(string key, int defaultValue = 0)
         {
             return GetQueryString(key).ToInt(defaultValue);
@@ -58,6 +113,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static bool GetQueryBool(string key, bool defaultValue = false)
         {
             return GetQueryString(key).ToBool(defaultValue);
@@ -69,6 +125,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static long GetQueryLong(string key, long defaultValue = 0)
         {
             return GetQueryString(key).ToLong(defaultValue);
@@ -80,6 +137,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static float GetQueryFloat(string key, float defaultValue = 0.0f)
         {
             return GetQueryString(key).ToFloat(defaultValue);
@@ -91,6 +149,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static double GetQueryDouble(string key, double defaultValue = 0.0d)
         {
             return GetQueryString(key).ToDouble(defaultValue);
@@ -102,6 +161,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static decimal GetQueryDecimal(string key, decimal defaultValue = 0.0m)
         {
             return GetQueryString(key).ToDecimal(defaultValue);
@@ -112,6 +172,7 @@ namespace SinGooCMS.Utility
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static DateTime GetQueryDatetime(string key)
         {
             return GetQueryString(key).ToDateTime();
@@ -123,33 +184,69 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static DateTime GetQueryDatetime(string key, DateTime defaultValue)
         {
             return GetQueryString(key).ToDateTime(defaultValue);
         }
 
-        /// <summary>
-        /// 获取查询字符串，并以“参数名=参数值”的形式存入字典
-        /// </summary>
-        /// <returns></returns>
-        public static IDictionary<string, string> GetRequestGet()
-        {
-            var dict = new Dictionary<string, string>();
-#if NETSTANDARD2_1
-            var requestKeys = UtilsBase.HttpContext.Request.Query.Keys;
-            foreach (var key in requestKeys)
-                dict.Add(key, UtilsBase.HttpContext.Request.Query[key]);
-#else
-            var requestKeys = UtilsBase.HttpContext.Request.QueryString.Keys;
-            foreach (string key in requestKeys)
-                dict.Add(key, UtilsBase.HttpContext.Request.QueryString[key]);
-#endif
-            return dict;
-        }
-
-#endregion
+        #endregion
 
         #region form
+
+        /// <summary>
+        /// 读取Form值，默认只有一个值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="defaultVal"></param>
+        /// <returns></returns>
+        public static T GetFormVal<T>(string key, T defaultVal = default(T))
+        {
+            var cols = GetFormVals<T>(key);
+            return cols == null
+                ? defaultVal
+                : cols.First();
+        }
+
+        /// <summary>
+        /// 读取Form值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetFormVals<T>(string key)
+        {
+            var lst = new List<T>();
+#if NETSTANDARD2_1
+            //直接引用UtilsBase.HttpContext.Request.Form会抛出异常，首先要判断 HasFormContentType
+            if (UtilsBase.HttpContext != null
+                && UtilsBase.HttpContext.Request != null
+                && UtilsBase.HttpContext.Request.HasFormContentType
+                && UtilsBase.HttpContext.Request.Form.ContainsKey(key))
+            {
+                var cols = UtilsBase.HttpContext.Request.Form[key];
+                //Post数据有多个同名键，值以逗号分隔 如111,2222，也可以用下标读取 Form[key][0]
+                for (var i = 0; i < cols.Count; i++)
+                    lst.Add(HttpUtility.UrlDecode(cols[i]).Trim().To<T>()); //中文需要URL解码
+
+                return lst;
+            }
+#else
+            if (UtilsBase.HttpContext != null && UtilsBase.HttpContext.Request.Form[key] != null)
+            {
+                //中文需要URL解码
+                string formVal = HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.Form[key]).Trim();
+                formVal.Split(',').ForEach(item =>
+                {
+                    lst.Add(item.To<T>());
+                });
+
+                return lst;
+            }
+#endif
+            return null;
+        }
 
         /// <summary>
         /// 读取form值
@@ -157,23 +254,24 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defalutValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static string GetFormString(string key, string defalutValue = "")
         {
 #if NETSTANDARD2_1
-            if (UtilsBase.HttpContext != null 
+            if (UtilsBase.HttpContext != null
                 && UtilsBase.HttpContext.Request != null
-                && UtilsBase.HttpContext.Request.ContentType != null
+                && UtilsBase.HttpContext.Request.HasFormContentType
                 && UtilsBase.HttpContext.Request.Form.ContainsKey(key)
                 && !string.IsNullOrEmpty(UtilsBase.HttpContext.Request.Form[key]))
             {
-                return HttpUtility.HtmlDecode(UtilsBase.HttpContext.Request.Form[key]).Trim();
+                return HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.Form[key]).Trim();
             }
 #else
-            if (UtilsBase.HttpContext != null && UtilsBase.HttpContext.Request.Form[key] == null)
+            if (UtilsBase.HttpContext != null && UtilsBase.HttpContext.Request.Form[key] != null)
             {
                 //这里中文需要URL解码
-                return HttpUtility.HtmlDecode(HttpUtility.UrlDecode(HttpContext.Current.Request.Form[key])).Trim();
-            }            
+                return HttpUtility.UrlDecode(UtilsBase.HttpContext.Request.Form[key]).Trim();
+            }
 #endif
 
             return defalutValue;
@@ -185,6 +283,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static int GetFormInt(string key, int defaultValue = 0)
         {
             return GetFormString(key).ToInt(defaultValue);
@@ -196,6 +295,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static bool GetFormBool(string key, bool defaultValue = false)
         {
             return GetFormString(key).ToBool(defaultValue);
@@ -207,6 +307,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static float GetFormFloat(string key, float defaultValue = 0.0f)
         {
             return GetFormString(key).ToFloat(defaultValue);
@@ -218,6 +319,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static double GetFormDouble(string key, double defaultValue = 0.0d)
         {
             return GetFormString(key).ToDouble(defaultValue);
@@ -229,6 +331,7 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static decimal GetFormDecimal(string key, decimal defaultValue = 0.0m)
         {
             return GetFormString(key).ToDecimal(defaultValue);
@@ -239,6 +342,7 @@ namespace SinGooCMS.Utility
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static DateTime GetFormDatetime(string key)
         {
             return GetFormString(key).ToDateTime();
@@ -250,51 +354,15 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
+        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static DateTime GetFormDatetime(string key, DateTime defaultValue)
         {
             return GetFormString(key).ToDateTime(defaultValue);
         }
 
-        /// <summary>
-        /// 获取post数据，并以“参数名=参数值”的形式组成数组
-        /// </summary>
-        /// <returns></returns>
-        public static IDictionary<string, string> GetRequestPost()
-        {
-            var dict = new Dictionary<string, string>();
-#if NETSTANDARD2_1
-            var requestKeys = UtilsBase.HttpContext.Request.Form.Keys;
-            foreach (var key in requestKeys)
-                dict.Add(key, UtilsBase.HttpContext.Request.Form[key]);
-#else
-            var requestKeys = UtilsBase.HttpContext.Request.Form.Keys;
-            foreach (string key in requestKeys)
-                dict.Add(key, UtilsBase.HttpContext.Request.Form[key]);
-#endif
-            return dict;
-        }
-
         #endregion
 
         #region 其它
-
-        /// <summary>
-        /// 地址字符串的查询部分
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public static string GetUrlSearch(string url)
-        {
-            if (!string.IsNullOrEmpty(url))
-            {
-                string[] strs1 = url.Split(new char[] { '/' });
-                string urlSearch = strs1[strs1.Length - 1];
-                if (urlSearch.IndexOf("?") != -1)
-                    return strs1[strs1.Length - 1].Split(new char[] { '?' })[1];
-            }
-
-            return "";
-        }
 
         /// <summary>
         /// 获取url地址
@@ -315,7 +383,7 @@ namespace SinGooCMS.Utility
 #else
             return UtilsBase.Request.Url.ToString();
 #endif
-        }        
+        }
 
         #endregion
     }

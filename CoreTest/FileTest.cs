@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using System.Data;
 using SinGooCMS.Utility;
 using SinGooCMS.Utility.Extension;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CoreTest
 {
@@ -13,21 +15,21 @@ namespace CoreTest
         [Test]
         public void ReadAllFiles()
         {
-            var lst = FileUtils.GetAllFiles(@"F:\jsonlee\study");
+            var lst = FileUtils.GetAllFiles(SystemUtils.GetMapPath("/TestSource/"));
         }
 
         [Test]
         public void CreateQRCode()
         {
-            var img = QRCodeUtils.GenerateQrCode("http://www.baidu.com", 30, @"f:\img.ico");
-            img.Save(@"f:\qrcode.png", System.Drawing.Imaging.ImageFormat.Png);
+            var img = QRCodeUtils.GenerateQrCode("http://www.singoo.top", 30, SystemUtils.GetMapPath("/TestSource/logo.png"));
+            img.Save(FileUtils.Combine(SystemUtils.GetMapPath("/TestSource/ImageTest"),"qrcode.png"), System.Drawing.Imaging.ImageFormat.Png);
         }
 
         [Test]
-        public void CreateCaptchaCode()
+        public async Task CreateCaptchaCode()
         {
             var captcha = CaptchaUtils.Create();
-            captcha.CheckCodeImg.WriteToFile(@"f:\Captcha.png");
+            await captcha.CheckCodeImg.WriteToFileAsync(FileUtils.Combine(SystemUtils.GetMapPath("/TestSource/ImageTest"), "Captcha.png"));
             Console.WriteLine("验证码字符串：" + captcha.CheckCodeString);
         }
 
@@ -37,17 +39,16 @@ namespace CoreTest
         [Test]
         public void CalFileHashVal()
         {
-            var hashVal = FileUtils.ReadFileToStream(@"F:\worklog.txt");
-            //Console.WriteLine("哈希值："+hashVal.GetFileMD5());
-            Assert.AreEqual("c8c08e7e31479e701f9afa7cd8970c74", hashVal.GetFileMD5());
+            var fs = FileUtils.ReadFileToStream(SystemUtils.GetMapPath("/TestSource/logo.png"));
+            Console.WriteLine("哈希值："+fs.GetFileMD5());
         }
 
         [Test]
-        public void SaveFileAsync()
+        public async Task SaveFileAsync()
         {
-            var fs = FileUtils.ReadFileToStream(@"F:\worklog.txt");
-            fs.SaveFileAsync(@"F:\worklog222.txt");
-            Assert.AreEqual(true, System.IO.File.Exists(@"F:\worklog222.txt"));
+            var fs = FileUtils.ReadFileToStream(SystemUtils.GetMapPath("/TestSource/logo.png"));
+            await fs.SaveFileAsync(SystemUtils.GetMapPath("/TestSource/logo2.png"));
+            Assert.AreEqual(true, System.IO.File.Exists(SystemUtils.GetMapPath("/TestSource/logo2.png")));
         }
 
     }

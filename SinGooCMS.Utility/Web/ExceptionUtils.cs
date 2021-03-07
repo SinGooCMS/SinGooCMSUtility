@@ -8,7 +8,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 异常信息格式化
     /// </summary>
-    public class ExceptionUtils
+    public sealed class ExceptionUtils
     {
         public static string FormatMessage(Exception e)
         {

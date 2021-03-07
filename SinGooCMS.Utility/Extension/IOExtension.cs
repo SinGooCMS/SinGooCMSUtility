@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SinGooCMS.Utility.Extension
 {
@@ -35,29 +36,14 @@ namespace SinGooCMS.Utility.Extension
             byte[] bytes = new byte[stream.Length];
             stream.Read(bytes, 0, bytes.Length);
             return bytes;
-        }
-
-        /// <summary>
-        /// 写byte[]到fileName
-        /// </summary>
-        /// <param name="bytes">byte[]</param>
-        /// <param name="fileName">保存至硬盘路径</param>
-        /// <returns></returns>
-        public static void WriteToFile(this byte[] bytes, string fileName)
-        {
-            using (var fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
-            {
-                fileStream.Write(bytes, 0, bytes.Length);
-                fileStream.Flush();
-            }
-        }
+        }        
 
         /// <summary>
         /// 异步写byte[]到fileName
         /// </summary>
         /// <param name="bytes"></param>
         /// <param name="fileName">保存至硬盘路径</param>
-        public static async void WriteToFileAsync(this byte[] bytes, string fileName)
+        public static async Task WriteToFileAsync(this byte[] bytes, string fileName)
         {
             using (var fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
             {
@@ -67,26 +53,11 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// 将内存流转储成文件
-        /// </summary>
-        /// <param name="ms"></param>
-        /// <param name="filename"></param>
-        public static void SaveFile(this Stream ms, string filename)
-        {
-            using (var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                byte[] buffer = ms.ToArray(); // 转化为byte格式存储
-                fs.Write(buffer, 0, buffer.Length);
-                fs.Flush();
-            }
-        }
-
-        /// <summary>
         /// 异步将内存流转储成文件
         /// </summary>
         /// <param name="ms"></param>
         /// <param name="filename"></param>
-        public static async void SaveFileAsync(this Stream ms, string filename)
+        public static async Task SaveFileAsync(this Stream ms, string filename)
         {
             using (var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {

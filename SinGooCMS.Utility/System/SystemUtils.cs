@@ -22,13 +22,13 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// 收藏夹
         /// </summary>
-        public static string Favorites=>
+        public static string Favorites =>
             Environment.GetFolderPath(Environment.SpecialFolder.Favorites);
 
         /// <summary>
         /// 我的文档
         /// </summary>
-        public static string MyDocuments=>
+        public static string MyDocuments =>
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         #endregion
@@ -40,25 +40,13 @@ namespace SinGooCMS.Utility
         /// <returns></returns>
         public static string GetMapPath(string path = "/")
         {
-#if NET461
-            if (System.Web.HttpContext.Current != null)
-                return System.Web.HttpContext.Current.Server.MapPath(path);
-            else
-            {
-                path = path.Replace("~/", "/").Replace("\\", "/");
-                if (path.StartsWith("/"))
-                    path = path.TrimStart('/');
-
-                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
-            }
-#endif
 #if NETSTANDARD2_1
-            path = path.Replace("~/", "/").Replace("\\", "/");
-            if (path.StartsWith("/"))
-                path = path.TrimStart('/');
-
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
-#endif           
+            return FileUtils.Combine(AppDomain.CurrentDomain.BaseDirectory, path).Replace("/", @"\");
+#else
+            return System.Web.HttpContext.Current != null
+                ? System.Web.HttpContext.Current.Server.MapPath(path).Replace("/",@"\")
+                : FileUtils.Combine(AppDomain.CurrentDomain.BaseDirectory, path).Replace("/",@"\");
+#endif
         }
     }
 }

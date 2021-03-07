@@ -4,17 +4,23 @@ using System.Data;
 using SinGooCMS.Utility.Extension;
 using System.Linq;
 using SinGooCMS.Utility;
+using System.Threading.Tasks;
 
 namespace NTFxTest
 {
     [TestClass]
     public class ImageTest
     {
-        private readonly string filePath = @"F:\jsonlee\study\test\abc.png";
+        //源图
+        private readonly string filePath = SystemUtils.GetMapPath("/TestSource/original.png");
+        //保存的目录
+        private readonly string savePath = SystemUtils.GetMapPath("/TestSource/ImageTest/");
 
         [TestMethod]
-        public void TestTrans()
+        public async Task TestTrans()
         {
+            FileUtils.CreateDirectory(savePath);
+
             //文件转图像类型
             var image = ImageUtils.ReadFileToImage(filePath);
             var bitmap = ImageUtils.ReadFileBitmap(filePath);
@@ -25,56 +31,64 @@ namespace NTFxTest
 
             //base64和图片互转
             var base64Str = image.ToBase64();
-            Console.WriteLine("base64string:"+base64Str);
-            ImageUtils.Base64StrToImage(base64Str).Save(@"f:\123.png");
+            await FileUtils.WriteFileContentAsync(FileUtils.Combine(savePath, "original_base64.txt"), base64Str);
+            Console.WriteLine("base64string:" + base64Str);
+            ImageUtils.Base64StrToImage(base64Str).Save(FileUtils.Combine(savePath, "original_base64.png"));
         }
 
         [TestMethod]
         public void TestProcess()
         {
+            FileUtils.CreateDirectory(savePath);
+
             var image = ImageUtils.ReadFileToImage(filePath);
             //转黑白图片
-            image.ToBWPic().Save(@"f:\黑白.png");
+            image.ToBWPic().Save(FileUtils.Combine(savePath, "黑白.png"));
             //调整光暗
-            image.LDPic(50).Save(@"f:\光暗.png");
+            image.LDPic(50).Save(FileUtils.Combine(savePath, "光暗.png"));
             //反色
-            image.RePic().Save(@"f:\反色.png");
+            image.RePic().Save(FileUtils.Combine(savePath, "反色.png"));
             //浮雕
-            image.Relief().Save(@"f:\浮雕.png");
+            image.Relief().Save(FileUtils.Combine(savePath, "浮雕.png"));
             //拉伸
-            image.ResizeImage(500, 300).Save(@"f:\拉伸.png");
+            image.ResizeImage(500, 300).Save(FileUtils.Combine(savePath, "拉伸.png"));
             //滤色
-            image.ColorFilter().Save(@"f:\滤色.png");
+            image.ColorFilter().Save(FileUtils.Combine(savePath, "滤色.png"));
             //马赛克
-            image.Mosaic(10).Save(@"f:\马赛克.png");
-            image.Dispose();
-
-            image = ImageUtils.ReadFileToImage(filePath);
+            image.Mosaic(10).Save(FileUtils.Combine(savePath, "马赛克.png"));
             //上下翻转
-            image.UpDownRev().Save(@"f:\上下翻转.png");
+            image.UpDownRev().Save(FileUtils.Combine(savePath, "上下翻转.png"));
             //左右翻转
-            image.LeftRightRev().Save(@"f:\左右翻转.png");
+            image.LeftRightRev().Save(FileUtils.Combine(savePath, "左右翻转.png"));
             //压缩图片
-            image.Compress(1000, 600).Save(@"f:\压缩.png");
+            image.Compress(600, 400).Save(FileUtils.Combine(savePath, "压缩.png"));
+            //等比压缩图片
+            image.CompressRate().Save(FileUtils.Combine(savePath, "等比压缩.png"));
+            //等宽压缩图片
+            image.CompressWidth(300).Save(FileUtils.Combine(savePath, "等宽压缩.png"));
+            //等高压缩图片
+            image.CompressHeight(200).Save(FileUtils.Combine(savePath, "等高压缩.png"));
             //裁切
-            image.CutImage(new System.Drawing.Rectangle(0, 0, 300, 200)).Save(@"f:\裁切.png"); ;
+            image.CutImage(new System.Drawing.Rectangle(0, 0, 300, 200)).Save(FileUtils.Combine(savePath, "裁切.png"));
 
         }
 
         [TestMethod]
         public void TestCut()
         {
+            FileUtils.CreateDirectory(savePath);
+
             var image = ImageUtils.ReadFileToImage(filePath);
             //缩略图
-            image.ThumbnailImage(300,150).Save(@"f:\缩略图.png");
-            ImageUtils.MakeThumbnail(filePath, 500, 450);
+            image.ThumbnailImage(300, 150).Save(FileUtils.Combine(savePath, "缩略图.png"));
+            ImageUtils.MakeThumbnail(filePath, 500, 450, FileUtils.Combine(savePath, "thumb.png"));
 
             //水印
             //文字水印
-            //ImageUtils.AddTextWatermark(filePath, "这是一个测试");
+            ImageUtils.AddTextWatermark(filePath, "这是一个测试", "#ffffff", "微软雅黑", WatermarkPosition.MiddleCenter, 0.6f, FileUtils.Combine(savePath, "文本水印.png"));
             //图片水印
-            string watermarkPic = @"F:\jsonlee\study\test\logo.png";
-            ImageUtils.AddImageWatermark(filePath, watermarkPic);
+            string watermarkPic = SystemUtils.GetMapPath("/TestSource/logo.png");
+            ImageUtils.AddImageWatermark(filePath, watermarkPic, WatermarkPosition.MiddleCenter, 0.6f, FileUtils.Combine(savePath, "图片水印.png"));
         }
     }
 }

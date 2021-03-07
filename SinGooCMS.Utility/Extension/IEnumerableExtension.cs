@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,6 +43,17 @@ namespace SinGooCMS.Utility.Extension
         }
 
         #endregion AsyncForEach
+
+        /// <summary>
+        /// 转为数据表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="lst"></param>
+        /// <returns></returns>
+        public static DataTable ToDataTable<T>(this IEnumerable<T> lst)
+        {
+            return lst.ToList().ToDataTable();
+        }
 
         /// <summary>
         /// 打乱集合元素顺序

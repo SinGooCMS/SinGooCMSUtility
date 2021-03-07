@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -153,22 +154,66 @@ namespace SinGooCMS.Utility.Extension
 
         #endregion
 
+        #region 行处理        
+
+        /// <summary>
+        /// 查找数据表的行
+        /// </summary>
+        /// <param name="dt">数据表</param>
+        /// <param name="colKey">单元列名</param>
+        /// <param name="colValue">单元列值</param>
+        /// <returns></returns>
+        public static DataRow FindRow(this DataTable dt, string colKey, string colValue)
+        {
+            return dt != null && dt.Rows.Count > 0
+                ? dt.AsEnumerable().Where(p => p.Field<string>(colKey).ToString().Equals(colValue)).FirstOrDefault()
+                : null;
+        }
+
         /// <summary>
         /// 是否存在行值
         /// </summary>
         /// <param name="dt"></param>
-        /// <param name="rowKey"></param>
-        /// <param name="rowValue"></param>
+        /// <param name="colKey"></param>
+        /// <param name="colValue"></param>
         /// <returns></returns>
-        public static bool ExistsRow(this DataTable dt, string rowKey, string rowValue)
+        public static bool ExistsRow(this DataTable dt, string colKey, string colValue)
         {
-            if (dt != null && dt.Rows.Count > 0)
+            return dt.FindRow(colKey, colValue) != null;
+        }
+
+        /// <summary>
+        /// 删除空白行
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static DataTable RemoveEmptyRow(this DataTable dt)
+        {
+            var lst = new List<DataRow>();
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                var temp = dt.AsEnumerable().Where(p => p.Field<string>(rowKey).ToString().Equals(rowValue)).FirstOrDefault();
-                return temp != null;
+                bool IsNull = true;
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    if (!string.IsNullOrEmpty(dt.Rows[i][j].ToString().Trim()))
+                    {
+                        IsNull = false;
+                        break;
+                    }
+                }
+
+                if (IsNull)
+                    lst.Add(dt.Rows[i]);
             }
 
-            return false;
+            for (int i = 0; i < lst.Count; i++)
+            {
+                dt.Rows.Remove(lst[i]);
+            }
+
+            return dt;
         }
+
+        #endregion        
     }
 }

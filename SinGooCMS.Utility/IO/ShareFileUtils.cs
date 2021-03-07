@@ -7,7 +7,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 局域网共享文件工具
     /// </summary>
-    public class ShareFileUtils
+    public sealed class ShareFileUtils
     {
         #region 属性
 

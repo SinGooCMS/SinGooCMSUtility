@@ -1,74 +1,69 @@
 ﻿using System;
-using System.Text;
-using NUnit.Framework;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
+using System.Text;
+using NUnit.Framework;
+using SinGooCMS.Ado.Interface;
 using SinGooCMS.Utility;
 using SinGooCMS.Utility.Extension;
-using SinGooCMS.Ado;
-using SinGooCMS.Ado.Interface;
 
 namespace CoreTest
 {
     public class ReflectTest
     {
         readonly string connStr = "server=(local);database=TestDB;uid=sa;pwd=123;";
-        readonly string path = AppDomain.CurrentDomain.BaseDirectory + "SinGooCMS.Ado.dll";
+        readonly string path = SystemUtils.GetMapPath("/SinGooCMS.Ado.dll");
         readonly string className = "SinGooCMS.Ado.DbAccess.SqlServerAccess";
 
         [Test]
         public void TestInstance()
         {
-            IDbAccess dbAccess = (IDbAccess)ReflectionUtil.CreateInstance(path, className, new object[] { connStr });
-            var model = dbAccess.Find<DbMaintenanceTestInfo>(1);
-            Assert.AreEqual("jsonlee", model?.UserName);
+            //创建实例
+            var dbAccess = (IDbAccess)ReflectionUtils.CreateInstance(path, className, new object[] { connStr });
+            var model = dbAccess.Find<StudentInfo>(7);
+            Assert.AreEqual("赵云", model?.UserName);
         }
 
         [Test]
         public void TestInvokeMethod()
         {
-            //var instance = ReflectionUtil.CreateInstance(path, "SinGooCMS.Ado.DbAccess.DbAccessBase", new object[] { connStr,SinGooCMS.Ado.DbProviderType.SqlServer });
-
+            var instance = ReflectionUtils.CreateInstance(path, className, new object[] { connStr });
             //普通方法
-            //int count = (int)instance.InvokeMethod("GetCount", null, new object[] { "DbMaintenanceTest","" });
-            //Assert.AreEqual(1099998, count);
+            var dt = (DataTable)instance.InvokeMethod("GetPagerDT", null, new object[] { "Student", "", "AutoID desc", 1, 100, "*" });
+            Console.WriteLine($"行数：{dt.Rows.Count}");
 
-            var instance = ReflectionUtil.CreateInstance(path, className, new object[] { connStr });
+            var instance2 = ReflectionUtils.CreateInstance(path, className, new object[] { connStr });
             //泛型方法
-            var model = (DbMaintenanceTestInfo)instance.InvokeMethod("Find", new Type[] { typeof(DbMaintenanceTestInfo) }, new object[] { 1 });
-            Assert.AreEqual("jsonlee", model?.UserName);
+            var model = (StudentInfo)instance2.InvokeMethod("Find", new Type[] { typeof(StudentInfo) }, new object[] { 1 });
+            Assert.AreEqual("刘备", model?.UserName);
         }
 
         [Test]
         public void TestProperty()
         {
-            var test = new DbMaintenanceTestInfo() { AutoID = 1, UserName = "jsonlee" };
-            var userName = test.GetProperty<string>("UserName");
-            test.SetProperty("UserName", "刘备");
-            Assert.AreEqual("刘备", test.UserName);
+            var model = new StudentInfo() { AutoID = 1, UserName = "jsonlee" };
+            var builder = new StringBuilder();
+            builder.Append($"读取属性：{model.GetProperty("UserName").Name} \r\n");
+            builder.Append($"读取属性值：{model.GetPropertyVal<string>("UserName")} \r\n");
+
+            //设置属性值
+            model.SetPropertyVal("UserName", "刘备");
+            builder.Append($"读取属性值：{model.UserName} \r\n");
+            Console.WriteLine(builder.ToString());
         }
 
         [Test]
         public void TestField()
         {
-            var test = new DbMaintenanceTestInfo() { AutoID = 1, UserName = "jsonlee" };
-            var fields = test.GetFields();
-            var val = test.GetField<string>("uname");
-            test.SetField("uname", "张飞");
+            var model = new StudentInfo();
+            var builder = new StringBuilder();
+            builder.Append($"读取字段：{model.GetField("score").Name} \r\n");
+            builder.Append($"读取字段值：{model.GetFieldVal<int>("score")} \r\n");
 
-            Assert.AreEqual("张飞", test.uname);
+            model.SetFieldVal("score", 99);
+            builder.Append($"读取字段值：{model.score} \r\n");
+            Console.WriteLine(builder.ToString());
         }
-    }
-
-    [Table("DbMaintenanceTest")]
-    public class DbMaintenanceTestInfo
-    {
-        private int id = 0;
-        public string uname = "jsonlee"; //private 读不到
-
-        [Key]
-        [NotMapped]
-        public int AutoID { get; set; }
-        public string UserName { get; set; }
     }
 }

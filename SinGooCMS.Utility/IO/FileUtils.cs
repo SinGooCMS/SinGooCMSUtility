@@ -7,68 +7,40 @@ using System.Threading.Tasks;
 namespace SinGooCMS.Utility
 {
     /// <summary>
+    /// 文件尺寸大小单位
+    /// </summary>
+    public enum FileSizeUnit
+    {
+        KB,
+        MB,
+        GB,
+        TB
+    }
+
+    /// <summary>
     /// 文件管理工具
     /// </summary>
-    public class FileUtils
+    public sealed class FileUtils
     {
-        #region 文件操作        
+        #region 文件操作
 
         /// <summary>
-        /// 创建文件
+        /// 异步创建文件并写入文本内容
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <param name="fileContent"></param>
-        public static void CreateFile(string absolutePath, string fileContent) =>
-            CreateFile(absolutePath, fileContent, "utf-8");
-
-        /// <summary>
-        /// 创建文件
-        /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <param name="fileContent"></param>
-        /// <param name="strCodeType"></param>
-        public static void CreateFile(string absolutePath, string fileContent, string strCodeType)
-        {
-            Encoding code = Encoding.GetEncoding(strCodeType);
-            StreamWriter mySream = new StreamWriter(absolutePath, false, code);
-            mySream.WriteLine(fileContent);
-            mySream.Flush();
-            mySream.Close();
-        }
-
-        /// <summary>
-        /// 异步创建文件
-        /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <param name="fileContent"></param>
-        /// <param name="strCodeType"></param>
-        public static async void CreateFileAsync(string absolutePath, string fileContent, string strCodeType)
-        {
-            Encoding code = Encoding.GetEncoding(strCodeType);
-            StreamWriter mySream = new StreamWriter(absolutePath, false, code);
-            await mySream.WriteLineAsync(fileContent);
-            await mySream.FlushAsync();
-            mySream.Close();
-        }
-
-        /// <summary>
-        /// 读取文件内容
-        /// </summary>
-        /// <param name="absolutePath"></param>
         /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string ReadFileContent(string absolutePath, Encoding encoding = null)
+        public static async Task CreateFileAsync(string absolutePath, string fileContent, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
 
-            string fileContent = string.Empty;
-            using (StreamReader sr = new StreamReader(absolutePath, encoding))
+            using (StreamWriter sw = new StreamWriter(absolutePath, false, encoding))
             {
-                fileContent = sr.ReadToEnd();
+                await sw.WriteLineAsync(fileContent);
+                await sw.FlushAsync();
+                sw.Close();
             }
-            return fileContent;
-
         }
 
         /// <summary>
@@ -91,28 +63,6 @@ namespace SinGooCMS.Utility
 
         }
 
-
-        /// <summary>
-        /// 写文件
-        /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <param name="fileContent"></param>
-        /// <param name="encoding"></param>
-        /// <param name="isAppend"></param>
-        public static void WriteFileContent(string absolutePath, string fileContent, bool isAppend, Encoding encoding = null)
-        {
-            if (!File.Exists(absolutePath))
-                CreateFile(absolutePath, string.Empty);
-
-            if (encoding == null)
-                encoding = Encoding.UTF8;
-
-            StreamWriter sw = new StreamWriter(absolutePath, isAppend, encoding);
-            sw.WriteLine(fileContent);
-            sw.Flush();
-            sw.Close();
-        }
-
         /// <summary>
         /// 异步写文件
         /// </summary>
@@ -120,104 +70,71 @@ namespace SinGooCMS.Utility
         /// <param name="fileContent"></param>
         /// <param name="isAppend"></param>
         /// <param name="encoding"></param>
-        public static async void WriteFileContentAsync(string absolutePath, string fileContent, bool isAppend, Encoding encoding = null)
+        public static async Task WriteFileContentAsync(string absolutePath, string fileContent, bool isAppend = false, Encoding encoding = null)
         {
             if (!File.Exists(absolutePath))
-                CreateFile(absolutePath, string.Empty);
+                await CreateFileAsync(absolutePath, string.Empty);
 
             if (encoding == null)
                 encoding = Encoding.UTF8;
 
-            StreamWriter sw = new StreamWriter(absolutePath, isAppend, encoding);
-            await sw.WriteLineAsync(fileContent);
-            await sw.FlushAsync();
-            sw.Close();
+            using (StreamWriter sw = new StreamWriter(absolutePath, isAppend, encoding))
+            {
+                await sw.WriteLineAsync(fileContent);
+                await sw.FlushAsync();
+                sw.Close();
+            }
         }
 
         /// <summary>
-        /// 删除文件
+        /// 重命名目录或者文件
         /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <returns></returns>
-        public static void DeleteFile(string absolutePath)
-        {
-            if (File.Exists(absolutePath))
-                File.Delete(absolutePath);
-        }
-
-        /// <summary>
-        /// 重命名文件
-        /// </summary>
-        /// <param name="absolutePath">文件所在的目录,不要最后那个斜杠例如E:\\Dir\\GG</param>
+        /// <param name="absolutePath">文件所在的目录</param>
         /// <param name="oldName">原名称</param>
         /// <param name="newName">修改的名称</param>
-        /// <param name="fileType">文件类型 0为文件夹 1是文件</param>
+        /// <param name="isFile">true=文件 false=文件夹</param>
         /// <returns></returns>
-        public static void ReNameFile(string absolutePath, string oldName, string newName, int fileType)
+        public static void ReNameFile(string absolutePath, string oldName, string newName, bool isFile = true)
         {
-            if (fileType.Equals(0))
+            if (isFile)
             {
-                if (Directory.Exists(absolutePath + "\\" + oldName))
-                    Directory.Move(absolutePath + "\\" + oldName, absolutePath + "\\" + newName.Replace(".", ""));
+                if (File.Exists(Combine(absolutePath, oldName)))
+                    File.Move(Combine(absolutePath, oldName), Combine(absolutePath, newName));
             }
             else
             {
-                if (File.Exists(absolutePath + "\\" + oldName))
-                    File.Move(absolutePath + "\\" + oldName, absolutePath + "\\" + newName);
+                if (Directory.Exists(Combine(absolutePath, oldName)))
+                    Directory.Move(Combine(absolutePath, oldName), Combine(absolutePath, newName.Replace(".", "")));
             }
         }
-        /// <summary>
-        /// 获取文件扩展名
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static string GetExtension(string fileName) => System.IO.Path.GetExtension(fileName);
 
         /// <summary>
         /// 获取文件大小
         /// </summary>
-        /// <param name="length"></param>
-        /// <param name="unit"></param>
+        /// <param name="length">长度：字节</param>
+        /// <param name="unit">单位，枚举：FileSizeUnit</param>
         /// <returns></returns>
-        public static string GetFileSize(decimal length, string unit = null)
+        public static string GetFileSize(decimal length, FileSizeUnit unit = FileSizeUnit.KB)
         {
             decimal num = 0m;
-            if (unit != null) //指定单位
+            switch (unit)
             {
-                switch (unit)
-                {
-                    case "GB":
-                        num = Math.Round((decimal)(length / (1024m * 1024m * 1024m)), 2, MidpointRounding.AwayFromZero);
-                        break;
-                    case "MB":
-                        num = Math.Round((decimal)(length / (1024m * 1024m)), 2, MidpointRounding.AwayFromZero);
-                        break;
-                    case "KB":
-                    default:
-                        num = Math.Round((decimal)(length / 1024m), 2, MidpointRounding.AwayFromZero);
-                        break;
-                }
-            }
-            else //不指定单位
-            {
-                if (length >= 1024m * 1024m * 1024m)
-                {
+                case FileSizeUnit.TB:
+                    num = Math.Round((decimal)(length / (1024m * 1024m * 1024m * 1024m)), 2, MidpointRounding.AwayFromZero);
+                    break;
+                case FileSizeUnit.GB:
                     num = Math.Round((decimal)(length / (1024m * 1024m * 1024m)), 2, MidpointRounding.AwayFromZero);
-                    unit = "GB";
-                }
-                else if (length >= 1024m * 1024m)
-                {
+                    break;
+                case FileSizeUnit.MB:
                     num = Math.Round((decimal)(length / (1024m * 1024m)), 2, MidpointRounding.AwayFromZero);
-                    unit = "MB";
-                }
-                else
-                {
+                    break;
+                case FileSizeUnit.KB:
+                default:
                     num = Math.Round((decimal)(length / 1024m), 2, MidpointRounding.AwayFromZero);
-                    unit = "KB";
-                }
+                    break;
             }
 
-            return num.ToString() + unit;
+            return num.ToString() + unit.ToString();
         }
         #endregion
 
@@ -231,9 +148,7 @@ namespace SinGooCMS.Utility
         public static void CreateDirectory(string absoluteDir)
         {
             if (!Directory.Exists(absoluteDir))
-            {
                 Directory.CreateDirectory(absoluteDir);
-            }
         }
 
         /// <summary>
@@ -257,8 +172,8 @@ namespace SinGooCMS.Utility
             //判断给定的路径是否存在,如果不存在则退出
             if (!Directory.Exists(absoluteDir))
                 return 0;
-            long len = 0;
 
+            long len = 0;
             //定义一个DirectoryInfo对象
             DirectoryInfo di = new DirectoryInfo(absoluteDir);
 
@@ -345,6 +260,29 @@ namespace SinGooCMS.Utility
             return lst;
         }
 
+        /// <summary>
+        /// 合并目录和文件名成为新的文件路径
+        /// </summary>
+        /// <param name="dir">绝对路径或者相对路径的目录路径</param>
+        /// <param name="fileName">文件名</param>
+        /// <returns></returns>
+        public static string Combine(string dir, string fileName)
+        {
+            if (dir.IndexOf(@"\") != -1 && !dir.EndsWith(@"\"))
+                dir += @"\";
+            else if (dir.IndexOf(@"\\") != -1 && !dir.EndsWith(@"\\"))
+                dir += @"\\";
+            else if (dir.IndexOf(@"/") != -1 && !dir.EndsWith(@"/"))
+                dir += @"/";
+
+            if (fileName.StartsWith(@"/"))
+                fileName = fileName.TrimStart('/');
+            else if (fileName.StartsWith(@"\"))
+                fileName = fileName.TrimStart('\\');
+
+            return Path.Combine(dir, fileName);
+        }
+
         #endregion     
 
         #region 备份与恢复
@@ -358,15 +296,15 @@ namespace SinGooCMS.Utility
         /// <returns>操作是否成功</returns>
         public static bool BackupFile(string sourceFileName, string destFileName, bool overwrite)
         {
-            if (!System.IO.File.Exists(sourceFileName))
+            if (!File.Exists(sourceFileName))
                 throw new FileNotFoundException(sourceFileName + "文件不存在！");
 
-            if (!overwrite && System.IO.File.Exists(destFileName))
+            if (!overwrite && File.Exists(destFileName))
                 return false;
 
             try
             {
-                System.IO.File.Copy(sourceFileName, destFileName, true);
+                File.Copy(sourceFileName, destFileName, true);
                 return true;
             }
             catch (Exception e)
@@ -399,18 +337,18 @@ namespace SinGooCMS.Utility
         {
             try
             {
-                if (!System.IO.File.Exists(backupFileName))
+                if (!File.Exists(backupFileName))
                     throw new FileNotFoundException(backupFileName + "文件不存在！");
 
                 if (backupTargetFileName != null)
                 {
-                    if (!System.IO.File.Exists(targetFileName))
+                    if (!File.Exists(targetFileName))
                         throw new FileNotFoundException(targetFileName + "文件不存在！无法备份此文件！");
                     else
-                        System.IO.File.Copy(targetFileName, backupTargetFileName, true);
+                        File.Copy(targetFileName, backupTargetFileName, true);
                 }
-                System.IO.File.Delete(targetFileName);
-                System.IO.File.Copy(backupFileName, targetFileName);
+                File.Delete(targetFileName);
+                File.Copy(backupFileName, targetFileName);
             }
             catch (Exception e)
             {
@@ -419,6 +357,12 @@ namespace SinGooCMS.Utility
             return true;
         }
 
+        /// <summary>
+        /// 恢复文件
+        /// </summary>
+        /// <param name="backupFileName"></param>
+        /// <param name="targetFileName"></param>
+        /// <returns></returns>
         public static bool RestoreFile(string backupFileName, string targetFileName)
         {
             return RestoreFile(backupFileName, targetFileName, null);
@@ -435,9 +379,7 @@ namespace SinGooCMS.Utility
         /// <returns></returns>
         public static Stream ReadFileToStream(string fileName)
         {
-            byte[] bytes = ReadFileToBytes(fileName);
-            Stream stream = new MemoryStream(bytes);
-            return stream;
+            return new MemoryStream(ReadFileToBytes(fileName));
         }
 
         /// <summary>
@@ -468,6 +410,6 @@ namespace SinGooCMS.Utility
             }
         }
 
-        #endregion
+        #endregion        
     }
 }

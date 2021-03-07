@@ -14,7 +14,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 模拟 httpget 和 httppost
     /// </summary>
-    public static class NetWorkUtils
+    public sealed class NetWorkUtils
     {
         #region HttpGet
 

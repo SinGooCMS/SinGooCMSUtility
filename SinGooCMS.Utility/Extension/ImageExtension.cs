@@ -207,24 +207,26 @@ namespace SinGooCMS.Utility.Extension
         /// <summary>
         /// 图片马赛克
         /// </summary>
-        /// <param name="bitmap"></param>
+        /// <param name="mybm"></param>
         /// <param name="effectWidth">影响范围</param>
         /// <returns></returns>
-        public static Image Mosaic(this Image bitmap, int effectWidth = 10)
+        public static Image Mosaic(this Image mybm, int effectWidth = 10)
         {
+            var bm = mybm.DeepClone();
+
             // 差异最多的就是以照一定范围取样 之后直接去下一个范围
-            for (int heightOfffset = 0; heightOfffset < bitmap.Height; heightOfffset += effectWidth)
+            for (int heightOfffset = 0; heightOfffset < bm.Height; heightOfffset += effectWidth)
             {
-                for (int widthOffset = 0; widthOffset < bitmap.Width; widthOffset += effectWidth)
+                for (int widthOffset = 0; widthOffset < bm.Width; widthOffset += effectWidth)
                 {
                     int avgR = 0, avgG = 0, avgB = 0;
                     int blurPixelCount = 0;
 
-                    for (int x = widthOffset; (x < widthOffset + effectWidth && x < bitmap.Width); x++)
+                    for (int x = widthOffset; (x < widthOffset + effectWidth && x < bm.Width); x++)
                     {
-                        for (int y = heightOfffset; (y < heightOfffset + effectWidth && y < bitmap.Height); y++)
+                        for (int y = heightOfffset; (y < heightOfffset + effectWidth && y < bm.Height); y++)
                         {
-                            System.Drawing.Color pixel = ((Bitmap)bitmap).GetPixel(x, y);
+                            System.Drawing.Color pixel = ((Bitmap)bm).GetPixel(x, y);
 
                             avgR += pixel.R;
                             avgG += pixel.G;
@@ -239,21 +241,20 @@ namespace SinGooCMS.Utility.Extension
                     avgG = avgG / blurPixelCount;
                     avgB = avgB / blurPixelCount;
 
-
                     // 所有范围内都设定此值
-                    for (int x = widthOffset; (x < widthOffset + effectWidth && x < bitmap.Width); x++)
+                    for (int x = widthOffset; (x < widthOffset + effectWidth && x < bm.Width); x++)
                     {
-                        for (int y = heightOfffset; (y < heightOfffset + effectWidth && y < bitmap.Height); y++)
+                        for (int y = heightOfffset; (y < heightOfffset + effectWidth && y < bm.Height); y++)
                         {
 
                             Color newColor = Color.FromArgb(avgR, avgG, avgB);
-                            ((Bitmap)bitmap).SetPixel(x, y, newColor);
+                            ((Bitmap)bm).SetPixel(x, y, newColor);
                         }
                     }
                 }
             }
 
-            return bitmap;
+            return bm;
         }
 
         #endregion
@@ -377,8 +378,46 @@ namespace SinGooCMS.Utility.Extension
 
         #region 压缩图片
 
+        /// <summary>
+        /// 等比压缩
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="rate"></param>
+        /// <returns></returns>
+        public static Image CompressRate(this Image bmp, float rate = 0.6f)
+        {
+            int newWidth = (bmp.Width * rate).ToInt();
+            int newHeight = (bmp.Height * rate).ToInt();
+
+            return bmp.Compress(newWidth, newHeight);
+        }
+
+        /// <summary>
+        /// 等宽压缩
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="newWidth"></param>
+        /// <returns></returns>
+        public static Image CompressWidth(this Image bmp, int newWidth)
+        {
+            int newHeight = ((newWidth / (bmp.Width * 1.0f)) * bmp.Height).ToInt();
+            return bmp.Compress(newWidth, newHeight);
+        }
+
+        /// <summary>
+        /// 等高压缩
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="newHeight"></param>
+        /// <returns></returns>
+        public static Image CompressHeight(this Image bmp, int newHeight)
+        {
+            int newWidth = ((newHeight / (bmp.Height * 1.0)) * bmp.Width).ToInt();
+            return bmp.Compress(newWidth, newHeight);
+        }
+
         /// <summary>  
-        ///  Resize图片   
+        ///  指定宽高压缩图片   
         /// </summary>  
         /// <param name="bmp">原始Bitmap </param>  
         /// <param name="newWidth">新的宽度</param>  
@@ -386,6 +425,9 @@ namespace SinGooCMS.Utility.Extension
         /// <returns>处理以后的图片</returns>  
         public static Image Compress(this Image bmp, int newWidth, int newHeight)
         {
+            if (bmp.Width < 100 && bmp.Height < 100)
+                return bmp;
+
             if (newWidth > bmp.Width || newHeight > bmp.Height)
                 return bmp;
 

@@ -53,7 +53,7 @@ namespace SinGooCMS.Utility.Extension
                     textReader.Close();
                     return local;
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException ex)
                 {
                     return default;
                 }

@@ -15,7 +15,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// session会话工具
     /// </summary>
-    public class SessionUtils
+    public sealed class SessionUtils
     {
         /// <summary>
         /// 是否包含key
@@ -35,11 +35,12 @@ namespace SinGooCMS.Utility
 
         /// <summary>
         /// 写入Session值
+        /// .net core 在Startup配置Session超时时间 services.AddSession(options => {options.IdleTimeout = TimeSpan.FromSeconds(30 * 60);});
         /// </summary>
         /// <param name="key">键</param>
         /// <param name="value">值</param>
         /// <param name="time">超时时间(分钟)</param>
-        public static void SetSession(string key, string value, int time = 60 * 24)
+        public static void SetSession(string key, string value, int time = 60 * 30)
         {
 #if NETSTANDARD2_1
             UtilsBase.HttpContext.Session.SetString(key, value); //net core的session过期时间在startup里面设置

@@ -132,34 +132,34 @@ namespace SinGooCMS.Utility.Extension
         /// <summary>
         /// 清除html脚本
         /// </summary>
-        /// <param name="Htmlstring"></param>
+        /// <param name="htmlstring"></param>
         /// <returns></returns>
-        public static string RemoveHtml(this string Htmlstring)
+        public static string RemoveHtml(this string htmlstring)
         {
             //删除脚本   
-            Htmlstring = Regex.Replace(Htmlstring, @"<script[^>]*?>.*?</script>", "", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"<script[^>]*?>.*?</script>", "", RegexOptions.IgnoreCase);
             //删除HTML   
-            Htmlstring = Regex.Replace(Htmlstring, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"-->", "", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"<!--.*", "", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"-->", "", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"<!--.*", "", RegexOptions.IgnoreCase);
 
-            Htmlstring = Regex.Replace(Htmlstring, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(nbsp|#160);", "   ", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
-            Htmlstring = Regex.Replace(Htmlstring, @"&#(\d+);", "", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(nbsp|#160);", "   ", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
+            htmlstring = Regex.Replace(htmlstring, @"&#(\d+);", "", RegexOptions.IgnoreCase);
 
-            Htmlstring.Replace("<", "");
-            Htmlstring.Replace(">", "");
-            Htmlstring.Replace("\r\n", "");
+            htmlstring.Replace("<", "");
+            htmlstring.Replace(">", "");
+            htmlstring.Replace("\r\n", "");
 
-            return Htmlstring.Trim();
+            return htmlstring.Trim();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace SinGooCMS.Utility.Extension
         /// <returns>处理后的字符串</returns>
         public static string ToTxt(this string htmlBlock)
         {
-            StringBuilder builder = new StringBuilder(htmlBlock);
+            var builder = new StringBuilder(htmlBlock);
             builder.Replace("&nbsp;", " ");
             builder.Replace("<br>", "\r\n");
             builder.Replace("<br>", "\n");
@@ -188,7 +188,7 @@ namespace SinGooCMS.Utility.Extension
         /// <returns>处理后的字符串</returns>
         public static String ToHtml(this string strTxt)
         {
-            StringBuilder sb = new StringBuilder(strTxt);
+            var sb = new StringBuilder(strTxt);
             sb.Replace("&", "&amp;");
             sb.Replace("<", "&lt;");
             sb.Replace(">", "&gt;");
@@ -225,7 +225,7 @@ namespace SinGooCMS.Utility.Extension
         /// <returns></returns>
         public static string ToUrlSearch(this IDictionary<string, string> data)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             foreach (var item in data)
                 builder.Append(Uri.EscapeDataString(item.Key) + "=" + Uri.EscapeDataString(item.Value) + "&");
 
@@ -235,12 +235,12 @@ namespace SinGooCMS.Utility.Extension
         /// <summary>
         /// url查询转字典
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="url"></param>
         /// <returns></returns>
-        public static IDictionary<string, string> ToUrlDictionary(this string data)
+        public static IDictionary<string, string> ToUrlDictionary(this string url)
         {
-            IDictionary<string, string> result = new Dictionary<string, string>();
-            string[] arrData = Uri.UnescapeDataString(data).Split('&');
+            var result = new Dictionary<string, string>();
+            string[] arrData = Uri.UnescapeDataString(url).Split('&');
             foreach (var item in arrData)
             {
                 if (item.IndexOf("=") != -1)
@@ -280,7 +280,7 @@ namespace SinGooCMS.Utility.Extension
                 return Regex.Replace(str, "(.{1}).*", $"$1{masks}");
         }
 
-        #endregion
+        #endregion       
 
     }
 }

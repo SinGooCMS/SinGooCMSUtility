@@ -5,7 +5,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 时间工具
     /// </summary>
-    public class TimeUtils
+    public sealed class TimeUtils
     {
         /// <summary>
         /// 返回时间差

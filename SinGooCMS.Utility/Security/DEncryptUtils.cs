@@ -8,7 +8,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 加密解密工具
     /// </summary>
-    public static class DEncryptUtils
+    public sealed class DEncryptUtils
     {
         #region 对称加密
 
@@ -25,7 +25,6 @@ namespace SinGooCMS.Utility
             DESCryptoServiceProvider provider = new DESCryptoServiceProvider();
             provider.Key = Encoding.ASCII.GetBytes(strKey.Substring(0, 8));
             provider.IV = Encoding.ASCII.GetBytes(strKey.Substring(0, 8));
-            //byte[] bytes = Encoding.GetEncoding("GB2312").GetBytes(strTxt); 20120530pm1734
             byte[] bytes = Encoding.UTF8.GetBytes(strTxt);
             MemoryStream stream = new MemoryStream();
             CryptoStream stream2 = new CryptoStream(stream, provider.CreateEncryptor(), CryptoStreamMode.Write);
@@ -62,8 +61,6 @@ namespace SinGooCMS.Utility
             stream2.Write(buffer, 0, buffer.Length);
             stream2.FlushFinalBlock();
             stream.Close();
-            //return Encoding.GetEncoding("GB2312").GetString(stream.ToArray());
-            //20120510pm1449修改
             return Encoding.UTF8.GetString(stream.ToArray());
         }
 

@@ -5,9 +5,12 @@ using System.Security.Cryptography;
 namespace SinGooCMS.Utility
 {
     /// <summary> 
-    /// RSA加密解密及RSA签名和验证
+    /// <para>RSA加密解密及RSA签名和验证</para>
+    /// <para>1、生成公钥和私钥 new RSACryption().RSAKey(out privateKey, out publicKey)</para>
+    /// <para>2、利用公钥加密 string encode = rsa.RSAEncrypt(publicKey, txt)</para>
+    /// <para>3、利用私钥解密 string decode = rsa.RSADecrypt(privateKey, encode)</para>
     /// </summary> 
-    public class RSACryption
+    public sealed class RSACryption
     {
         #region RSA 加密解密
 

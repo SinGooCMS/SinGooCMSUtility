@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing;
+using OfficeOpenXml.Style;
 using SinGooCMS.Utility.Extension;
 
 namespace SinGooCMS.Utility
@@ -13,66 +15,101 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// EPPlus操作excel工具类
     /// </summary>
-    public class EPPlusUtils
+    public sealed class EPPlusUtils
     {
-        static readonly string folder = $"/upload/{DateTime.Now:yyyy}/{DateTime.Now:MM}/";
-
         #region 读取
 
         /// <summary>
         /// 读取单元格的值
         /// </summary>
         /// <param name="filePath"></param>
-        /// <param name="row">行</param>
-        /// <param name="col">列</param>
-        /// <param name="sheetName">表单名称，未指定默认第一个表单</param>
+        /// <param name="address"></param>
         /// <returns></returns>
-        public static object ReadCell(string filePath, int row = 1, int col = 1, string sheetName = "")
+        public static object ReadCell(string filePath, string address = "A1") => ReadCell(filePath, "", address);
+
+        /// <summary>
+        /// 读取单元格的值
+        /// </summary>
+        /// <param name="filePath">excel文件路径</param>
+        /// <param name="sheetName">工作表名</param>
+        /// <param name="address">地址</param>
+        /// <returns></returns>
+        public static object ReadCell(string filePath, string sheetName = "", string address = "A1")
         {
             FileInfo file = new FileInfo(filePath);
-            ExcelPackage package = new ExcelPackage(file);
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+                ExcelWorksheet worksheet = sheetName.IsNullOrEmpty()
+                ? package.Workbook.Worksheets[0]
+                : package.Workbook.Worksheets[sheetName];
 
-            ExcelWorksheet worksheet = null;
-            if (!string.IsNullOrEmpty(sheetName))
-                worksheet = package.Workbook.Worksheets[sheetName];
-            else
-                worksheet = package.Workbook.Worksheets[0];
-
-            return worksheet.Cells[row, col].Value;
+                return worksheet.Cells[address].Value;
+            }
         }
 
         /// <summary>
-        /// 读取excel到dt
+        /// 读取单元格的值
         /// </summary>
         /// <param name="filePath"></param>
-        /// <param name="sheetName"></param>
-        /// <param name="startRowNum"></param>
-        /// <param name="endRowNum"></param>
-        /// <param name="isSavePic"></param>
-        /// <param name="picSavePath"></param>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
         /// <returns></returns>
-        public static DataTable Read(string filePath, string sheetName = "", int startRowNum = 1, int endRowNum = 0, bool isSavePic = true, string picSavePath = "")
+        public static object ReadCell(string filePath, int row = 1, int col = 1) => ReadCell(filePath, "", row, col);
+
+        /// <summary>
+        /// 读取单元格的值
+        /// </summary>
+        /// <param name="filePath">excel文件路径</param>
+        /// <param name="sheetName">表单名称，未指定默认第一个表单</param>
+        /// <param name="row">行</param>
+        /// <param name="col">列</param>        
+        /// <returns></returns>
+        public static object ReadCell(string filePath, string sheetName = "", int row = 1, int col = 1)
         {
             FileInfo file = new FileInfo(filePath);
-            ExcelPackage package = new ExcelPackage(file);
-            ExcelWorksheet worksheet = null;
-            if (!string.IsNullOrEmpty(sheetName))
-                worksheet = package.Workbook.Worksheets[sheetName];
-            else
-                worksheet = package.Workbook.Worksheets[0];
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+                ExcelWorksheet worksheet = sheetName.IsNullOrEmpty()
+                ? package.Workbook.Worksheets[0]
+                : package.Workbook.Worksheets[sheetName];
 
-            return Read(worksheet, startRowNum, endRowNum, isSavePic, picSavePath);
+                return worksheet.Cells[row, col].Value;
+            }
         }
 
         /// <summary>
-        /// 读取excel
+        /// 读取excel到dt,图片保存到文件夹：/upload/epplus/
+        /// </summary>
+        /// <param name="filePath">excel文件路径</param>
+        /// <param name="sheetName">工作表名</param>
+        /// <param name="startRowNum">指定起始行</param>
+        /// <param name="endRowNum">指定结束行</param>
+        /// <param name="isSavePic">是否保存图片</param>
+        /// <param name="picSavePath">图片保存目录</param>
+        /// <returns></returns>
+        public static DataTable Read(string filePath, string sheetName = "", int startRowNum = 1, int endRowNum = 0, bool isSavePic = true, string picSavePath = "/upload/epplus/")
+        {
+            FileInfo file = new FileInfo(filePath);
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+                ExcelWorksheet worksheet = sheetName.IsNullOrEmpty()
+                ? package.Workbook.Worksheets[0]
+                : package.Workbook.Worksheets[sheetName];
+
+                return Read(worksheet, startRowNum, endRowNum, isSavePic, picSavePath);
+            }
+        }
+
+        /// <summary>
+        /// 读取excel,图片保存到文件夹：/upload/epplus/
         /// </summary>
         /// <param name="worksheet"></param>
         /// <param name="startRowNum">起始行（从表头算起）</param>
         /// <param name="endRowNum">结束行（不设置默认）</param>
         /// <param name="isSavePic">是否保存图片（保存到/update/年/月/ 目录下 如/upload/2020/06/）</param>
+        /// <param name="picSavePath">图片保存目录</param>
         /// <returns></returns>
-        public static DataTable Read(ExcelWorksheet worksheet, int startRowNum = 1, int endRowNum = 0, bool isSavePic = true, string picSavePath = "")
+        public static DataTable Read(ExcelWorksheet worksheet, int startRowNum = 1, int endRowNum = 0, bool isSavePic = true, string picSavePath = "/upload/epplus/")
         {
             //获取worksheet的行数
             int rows = worksheet.Dimension.End.Row;
@@ -136,15 +173,12 @@ namespace SinGooCMS.Utility
 
                             if (val != null)
                             {
-                                var type = val.GetType().ToString();
-                                if (fmt == "m/d;@" && type == "System.Double")
-                                {
+                                if (val.GetType() == typeof(System.DateTime))
                                     dr[j - 1] = worksheet.Cells[i, j].GetValue<DateTime>(); //日期格式
-                                }
-                                else if (fmt.IndexOf("%") != -1 && type == "System.Double")
-                                {
+                                else if (val.GetType() == typeof(System.Double) && fmt.IndexOf("yyyy") != -1)
+                                    dr[j - 1] = worksheet.Cells[i, j].GetValue<DateTime>(); //日期格式
+                                else if (val.GetType() == typeof(System.Double) && fmt.IndexOf("%") != -1)
                                     dr[j - 1] = worksheet.Cells[i, j].GetValue<decimal>() % 100; //百分比格式
-                                }
                                 else
                                     dr[j - 1] = val.ToString(); //其它格式保存为字符串
                             }
@@ -155,8 +189,7 @@ namespace SinGooCMS.Utility
                 }
             }
 
-            RemoveEmptyRow(ref dt); //清除空白行
-            return dt;
+            return dt.RemoveEmptyRow(); //清除空白行并返回
         }
 
         /// <summary>
@@ -191,142 +224,73 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// 导出excel
         /// </summary>
-        /// <param name="dt"></param>
-        /// <param name="filePath"></param>
-        /// <param name="sheetName"></param>
-        /// <param name="startPosition"></param>
-        /// <param name="printHeader"></param>
-        public static void Export(DataTable dt, string filePath, string sheetName = "Sheet1", string startPosition = "A1", bool printHeader = true)
+        /// <param name="dt">数据表</param>
+        /// <param name="filePath">导入的文件路径</param>
+        /// <param name="sheetName">工作表名</param>
+        /// <param name="startPosition">在工作表里写入的起始位置</param>
+        /// <param name="dateFormat">日期格式，指定多个格式如：yyyy-mm-dd,yyyy-mm-dd HH:mm:ss</param>
+        /// <param name="printHeader">是否输出标题</param>
+        /// <param name="isSetStyle">是否设置样式</param>
+        /// <param name="headerHeight">标题行高 默认26</param>
+        /// <param name="headerFontSize">标题字体大小 默认12</param>
+        /// <param name="headerBgColor">标题的背景颜色</param>
+        public static void Export(DataTable dt, string filePath, string sheetName = "Sheet1", string startPosition = "A1", string dateFormat = "yyyy-mm-dd", bool printHeader = true, bool isSetStyle = true, int headerHeight = 26, int headerFontSize = 12, Color? headerBgColor = null)
         {
+            if (File.Exists(filePath))
+                File.Delete(filePath); //删除已有的旧文件
+
             FileInfo file = new FileInfo(filePath);
             using (ExcelPackage pack = new ExcelPackage(file))
             {
-                ExcelWorksheet w = pack.Workbook.Worksheets[sheetName];
-                if (w != null && w.Name.Equals(sheetName)) //判断是否存在该sheet表，存在则删除
-                    pack.Workbook.Worksheets.Delete(w);
+                //加入工作表
                 ExcelWorksheet sheet = pack.Workbook.Worksheets.Add(sheetName);
-                sheet.Cells[startPosition].LoadFromDataTable(dt, printHeader); //第二个参数设置为true则显示datable表头
+                //从起始位置导入dt数据集
+                sheet.Cells[startPosition].LoadFromDataTable(dt, printHeader); //第二个参数设置为true则显示datable表头 
+                var address = sheet.Cells[startPosition].Start; //起始的位置
+
+                //遍历工作表的列
+                int counter = 0;
+                string[] arrDateFormat = dateFormat.Split(',');
+                for (var i = 0; i < dt.Columns.Count; i++)
+                {
+                    if (dt.Columns[i].DataType == typeof(DateTime))
+                    {
+                        if (arrDateFormat.Length > 0)
+                        {
+                            //指定了多个格式，按顺序赋日期格式
+                            sheet.Column(address.Column + i).Style.Numberformat.Format =
+                                arrDateFormat.Length > counter
+                                ? arrDateFormat[counter]
+                                : arrDateFormat[arrDateFormat.Length - 1];
+                        }
+                        else
+                            sheet.Column(address.Column + i).Style.Numberformat.Format = dateFormat; //指定日期格式，否则只是数字
+
+                        counter++;
+                    }
+
+                    //设置表头样式
+                    if (printHeader && isSetStyle)
+                    {
+                        if (headerBgColor == null)
+                            headerBgColor = Color.FromArgb(0, 155, 70);
+                        sheet.Row(address.Row).Height = headerHeight;
+                        sheet.Cells[address.Row, address.Column + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;//水平居中
+                        sheet.Cells[address.Row, address.Column + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;//垂直居中
+                        sheet.Cells[address.Row, address.Column + i].Style.Font.Bold = true;//字体为粗体
+                        sheet.Cells[address.Row, address.Column + i].Style.Font.Color.SetColor(Color.White);//字体颜色
+                        sheet.Cells[address.Row, address.Column + i].Style.Font.Size = headerFontSize;//字体大小
+                        sheet.Cells[address.Row, address.Column + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        sheet.Cells[address.Row, address.Column + i].Style.Fill.BackgroundColor.SetColor(headerBgColor.Value);//设置单元格背景色
+                    }
+                }
+
+                sheet.Cells[sheet.Dimension.Address].AutoFitColumns(); //自动列宽
                 pack.Save();
             }
         }
 
-        #endregion
-
-        #region 数据检验
-
-        /// <summary>
-        /// 数据校验
-        /// </summary>
-        /// <param name="dt">数据表</param>
-        /// <param name="filters">对照的字段</param>
-        /// <param name="valRequired">是否必填</param>
-        /// <param name="valLens">值长度</param>
-        /// <param name="valTypes">值类型</param>
-        /// <param name="limitRegion">单元格限定取值范围</param>
-        /// <param name="groupKey">多个字段的唯一组</param>
-        /// <returns></returns>
-        public static string ValidateData(DataTable dt, string[] filters, string[] valRequired, int[] valLens, Type[] valTypes,
-            Dictionary<string, string[]> limitRegion = null, string[] groupKey = null)
-        {
-            if (dt == null)
-                return "数据集是空的";
-            else if (dt.Rows.Count == 0)
-                return "数据集是空的";
-            else
-            {
-                //清除空白行
-                RemoveEmptyRow(ref dt);
-
-                //1、检查结构是否完整
-                //string[] filters = { "线长工号", "线长姓名", "线别", "效率百分比", "日期", "备注" };
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    if (dt.Columns[i].ColumnName != filters[i])
-                    {
-                        return "缺少字段[" + filters[i] + "]或者未按导入模板字段排列顺序";
-                    }
-                }
-
-                //2、检查数据格式是否正确            
-                //string[] needVal = { "NotNull", "NotNull", "NotNull", "NotNull", "NotNull", "Null" };
-                //int[] rowLens = { 50, 50, 50, -1, -1, 100 };
-                //Type[] types = { typeof(String), typeof(String), typeof(String), typeof(Decimal), typeof(DateTime), typeof(String) };
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    var row = dt.Rows[i];
-                    for (var j = 0; j < dt.Columns.Count; j++)
-                    {
-                        if (valRequired[j] == "NotNull" && (row[j] == DBNull.Value || row[j].ToString().Trim().Length == 0))
-                            return string.Format("字段[{0}]在第 {1} 行数据的值不能为空", filters[j], i + 1);
-                        else if (valLens[j] > -1 && row[j].ToString().Trim().Length > valLens[j])
-                            return string.Format("字段[{0}]在第 {1} 行数据的长度超过 {2}", filters[j], i + 1, valLens[j]);
-                        else
-                        {
-                            if (valTypes[j] == typeof(Decimal) && !row[j].ToString().IsDecimal())
-                                return string.Format("字段[{0}]在第 {1} 行数据的值格式不正确，应为数值格式", filters[j], i + 1);
-                            else if (valTypes[j] == typeof(DateTime) && !row[j].ToString().IsDate())
-                                return string.Format("字段[{0}]在第 {1} 行数据的值格式不正确，应为日期格式", filters[j], i + 1);
-                            else if (valTypes[j] == typeof(Int32) && !row[j].ToString().IsInt())
-                                return string.Format("字段[{0}]在第 {1} 行数据的值格式不正确，应为整数格式", filters[j], i + 1);
-                        }
-
-                        //检查限定值
-                        if (limitRegion != null && limitRegion.Count > 0)
-                        {
-                            foreach (KeyValuePair<string, string[]> item in limitRegion)
-                            {
-                                string colName = dt.Columns[j].ColumnName;
-                                if (colName == item.Key
-                                    && !item.Value.Contains(dt.Rows[i][colName].ToString()))
-                                    return string.Format("数据列[{0}]限制取值范围[{1}]", colName, string.Join(",", item.Value));
-                            }
-                        }
-                    }
-                }
-
-                //3、判断是否有重复数据
-                //string[] groupKey = { "线长工号", "线长姓名","日期" };
-                if (groupKey != null)
-                {
-                    DataView dv = new DataView(dt);
-                    if (dv.ToTable(true, groupKey).Rows.Count < dt.Rows.Count)
-                        return string.Format("组[{0}]存在重复数据", String.Join(",", groupKey));
-                }
-            }
-
-            return "success";
-        }
-
-        #endregion
-
-        /// <summary>
-        /// 将DataTable转换为标准的CSV标准格式
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        public static string DataTableToCsvFormat(DataTable table)
-        {
-            //以半角逗号（即,）作分隔符，列为空也要表达其存在。  
-            //列内容如存在半角逗号（即,）则用半角引号（即""）将该字段值包含起来。  
-            //列内容如存在半角引号（即"）则应替换成半角双引号（""）转义，并用半角引号（即""）将该字段值包含起来。  
-            StringBuilder sb = new StringBuilder();
-            DataColumn colum;
-            foreach (DataRow row in table.Rows)
-            {
-                for (int i = 0; i < table.Columns.Count; i++)
-                {
-                    colum = table.Columns[i];
-                    if (i != 0) sb.Append(",");
-                    if (colum.DataType == typeof(string) && row[colum].ToString().Contains(","))
-                    {
-                        sb.Append("\"" + row[colum].ToString().Replace("\"", "\"\"") + "\"");
-                    }
-                    else sb.Append(row[colum].ToString());
-                }
-                sb.AppendLine();
-            }
-            return sb.ToString();
-        }
+        #endregion        
 
         #region helper
 
@@ -336,8 +300,13 @@ namespace SinGooCMS.Utility
         /// <param name="pic">excel图片</param>
         /// <param name="picSavePath">图片保存的路径</param>
         /// <returns></returns>
-        private static string SavePicture(ExcelPicture pic, string picSavePath = "")
+        private static string SavePicture(ExcelPicture pic, string picSavePath = "/upload/epplus/")
         {
+            //目录的绝对路径
+            string absoluteSavePath = SystemUtils.GetMapPath(picSavePath);
+            if (!Directory.Exists(absoluteSavePath))
+                Directory.CreateDirectory(absoluteSavePath);
+
             /*
             ExcelDrawing 包括 图片名字、说明、和位置信息，位置即在单元格里的位置，
             worksheet.Drawings[1].From
@@ -350,7 +319,7 @@ namespace SinGooCMS.Utility
             ExcelDrawing 是指画在单元格里的图片 包括位置信息
             ExcelPicture 是指独立于表单的图片信息，包括图片流信息
             */
-            string filename = (picSavePath.Length == 0 ? folder : picSavePath) + StringUtils.GetNewFileName() + "." + pic.ImageFormat.ToString().ToLower();
+            string filename = FileUtils.Combine(picSavePath, StringUtils.GetNewFileName() + "." + pic.ImageFormat.ToString().ToLower());
             string physicFilePath = SystemUtils.GetMapPath(filename);
             pic.Image.Save(physicFilePath);
             if (File.Exists(physicFilePath))
@@ -359,35 +328,6 @@ namespace SinGooCMS.Utility
             }
 
             return "";
-        }
-
-        /// <summary>
-        /// 清除空白行，空白行即整行都是空字符串的
-        /// </summary>
-        /// <param name="dt"></param>
-        private static void RemoveEmptyRow(ref DataTable dt)
-        {
-            List<DataRow> lst = new List<DataRow>();
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                bool IsNull = true;
-                for (int j = 0; j < dt.Columns.Count; j++)
-                {
-                    if (!string.IsNullOrEmpty(dt.Rows[i][j].ToString().Trim()))
-                    {
-                        IsNull = false;
-                        break;
-                    }
-                }
-
-                if (IsNull)
-                    lst.Add(dt.Rows[i]);
-            }
-
-            for (int i = 0; i < lst.Count; i++)
-            {
-                dt.Rows.Remove(lst[i]);
-            }
         }
 
         #endregion

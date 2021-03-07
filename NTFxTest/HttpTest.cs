@@ -23,7 +23,7 @@ namespace NTFxTest
         public void TestPing()
         {
             Assert.AreEqual(true, NetWorkUtils.Ping("www.baidu.com"));
-            Assert.AreEqual(true, NetWorkUtils.Ping("103.235.46.39"));
+            //Assert.AreEqual(true, NetWorkUtils.Ping("103.235.46.39"));
         }
     }
 }

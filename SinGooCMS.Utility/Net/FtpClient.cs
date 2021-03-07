@@ -11,7 +11,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// FTP客户端操作类
     /// </summary>
-    public class FtpClient
+    public sealed class FtpClient
     {
         #region 私有属性
 

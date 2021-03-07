@@ -10,7 +10,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// IP工具
     /// </summary>
-    public static class IPUtils
+    public sealed class IPUtils
     {
         /// <summary>
         /// 获得当前页面客户端的IP
@@ -30,7 +30,8 @@ namespace SinGooCMS.Utility
             }
             else
             {
-                return Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(p => p.AddressFamily.ToString() == "InterNetwork")?.ToString();
+                return Dns.GetHostEntry(Dns.GetHostName())
+                    .AddressList.FirstOrDefault(p => p.AddressFamily.ToString() == "InterNetwork")?.ToString();
             }
 #else
             if (UtilsBase.HttpContext != null)
@@ -61,8 +62,7 @@ namespace SinGooCMS.Utility
             if (ip.IsNullOrEmpty())
                 ip = GetIP();
 
-            IPScanner scanner = new IPScanner();
-            return scanner.IPLocation(ip); //从纯真数据库读取
+            return new IPScanner().IPLocation(ip); //从纯真数据库读取
         }
 
         #region 检查IP是否在IP段中

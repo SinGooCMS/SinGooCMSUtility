@@ -8,7 +8,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 二维码工具类 开源地址：https://github.com/codebude/QRCoder/
     /// </summary>
-    public class QRCodeUtils
+    public sealed class QRCodeUtils
     {
         /// <summary>
         /// 创建二维码

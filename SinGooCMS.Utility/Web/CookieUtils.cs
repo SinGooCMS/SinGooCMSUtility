@@ -12,7 +12,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// cookie工具
     /// </summary>
-    public class CookieUtils
+    public sealed class CookieUtils
     {
         /// <summary>
         /// 是否包含key
@@ -89,9 +89,9 @@ namespace SinGooCMS.Utility
             UtilsBase.HttpContext.Request.Cookies.TryGetValue(key, out string value);
             return string.IsNullOrEmpty(value) ? string.Empty : value;
 #else
-            if (UtilsBase.HttpContext != null &&
-                UtilsBase.HttpContext.Request.Cookies != null &&
-                UtilsBase.HttpContext.Request.Cookies[key] != null)
+            if (UtilsBase.HttpContext != null 
+                && UtilsBase.HttpContext.Request.Cookies != null 
+                && UtilsBase.HttpContext.Request.Cookies[key] != null)
             {
                 return HttpContext.Current.Request.Cookies[key].Value;
             }

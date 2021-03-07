@@ -13,8 +13,11 @@ namespace SinGooCMS.Utility
 {
     /// <summary>
     /// 配置管理
+    /// <para>1、.net core读取appsettings.json文件</para>
+    /// <para>2、.net framework web读取web.config文件</para>
+    /// <para>3、.net framework cs读取app.config</para>
     /// </summary>
-    public static class ConfigUtils
+    public sealed class ConfigUtils
     {
 #if NETSTANDARD2_1
         /// <summary>
@@ -32,6 +35,14 @@ namespace SinGooCMS.Utility
         #region 常用配置
 
         /// <summary>
+        /// 数据库类型 路径：ConnectionStrings:ProviderName
+        /// </summary>
+        public static string ProviderName => Configuration.GetConnectionString("ProviderName");
+        /// <summary>
+        /// 数据库库连接字符串 路径：ConnectionStrings:SQLConnSTR
+        /// </summary>
+        public static string DefConnStr => Configuration.GetConnectionString("SQLConnSTR");
+        /// <summary>
         /// 连接设置
         /// </summary>
         public static IConfigurationSection ConnectionStrings => Configuration.GetSection("ConnectionStrings");
@@ -39,17 +50,7 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// app设置
         /// </summary>
-        public static IConfigurationSection AppSettings => Configuration.GetSection("AppSettings");
-
-        /// <summary>
-        /// 数据库类型
-        /// </summary>
-        public static string ProviderName => Configuration.GetConnectionString("ProviderName");
-
-        /// <summary>
-        /// 数据库库连接字符串
-        /// </summary>
-        public static string DefConnStr => Configuration.GetConnectionString("SQLConnSTR");
+        public static IConfigurationSection AppSettings => Configuration.GetSection("AppSettings");        
 
         #endregion
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+
 #if NETSTANDARD2_1
 using Microsoft.Extensions.Caching.Memory;
 #else
@@ -16,7 +17,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 缓存管理
     /// </summary>
-    public class CacheUtils
+    public sealed class CacheUtils
     {
 #if NETSTANDARD2_1
         private static IMemoryCache cache;

@@ -4,7 +4,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using SinGooCMS.Utility.Extension;
 
 namespace SinGooCMS.Utility
@@ -12,7 +11,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 图片处理
     /// </summary>
-    public static class ImageUtils
+    public sealed class ImageUtils
     {
         #region 图片文件转Image、Bitmap
 
@@ -57,205 +56,10 @@ namespace SinGooCMS.Utility
         /// <param name="fileFullName"></param>
         public static string ImageToBase64(string fileFullName)
         {
-            Image file = new Bitmap(fileFullName);
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                file.Save(memoryStream, file.RawFormat);
-                byte[] imageBytes = memoryStream.ToArray();
-                return Convert.ToBase64String(imageBytes);
-            }
+            return ReadFileToImage(fileFullName).ToBase64();
         }
 
-        #endregion        
-
-        #region 无损压缩图片
-
-        /// <summary>
-        /// 无损压缩图片
-        /// </summary>
-        /// <param name="sFile">原图片地址</param>
-        /// <param name="dFile">压缩后保存图片地址</param>
-        /// <param name="quality">压缩质量（数字越小压缩率越高）1-100</param>
-        /// <param name="size">压缩后图片的最大大小</param>
-        /// <param name="sfsc">是否是第一次调用</param>
-        /// <returns></returns>
-        public static bool CompressImage(string sFile, string dFile, byte quality = 90, int size = 1024, bool sfsc = true)
-        {
-            //如果是第一次调用，原始图像的大小小于要压缩的大小，则直接复制文件，并且返回true
-            var firstFileInfo = new FileInfo(sFile);
-            if (sfsc && firstFileInfo.Length < size * 1024)
-            {
-                firstFileInfo.CopyTo(dFile);
-                return true;
-            }
-
-            using (Image iSource = Image.FromFile(sFile))
-            {
-                ImageFormat tFormat = iSource.RawFormat;
-                int dHeight = iSource.Height;
-                int dWidth = iSource.Width;
-                int sW, sH;
-
-                //按比例缩放
-                Size temSize = new Size(iSource.Width, iSource.Height);
-                if (temSize.Width > dHeight || temSize.Width > dWidth)
-                {
-                    if (temSize.Width * dHeight > temSize.Width * dWidth)
-                    {
-                        sW = dWidth;
-                        sH = dWidth * temSize.Height / temSize.Width;
-                    }
-                    else
-                    {
-                        sH = dHeight;
-                        sW = temSize.Width * dHeight / temSize.Height;
-                    }
-                }
-                else
-                {
-                    sW = temSize.Width;
-                    sH = temSize.Height;
-                }
-
-                using (Bitmap bmp = new Bitmap(dWidth, dHeight))
-                {
-                    using (Graphics g = Graphics.FromImage(bmp))
-                    {
-                        g.Clear(Color.WhiteSmoke);
-                        g.CompositingQuality = CompositingQuality.HighQuality;
-                        g.SmoothingMode = SmoothingMode.HighQuality;
-                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        g.DrawImage(iSource, new Rectangle((dWidth - sW) / 2, (dHeight - sH) / 2, sW, sH), 0, 0, iSource.Width, iSource.Height, GraphicsUnit.Pixel);
-
-                        //以下代码为保存图片时，设置压缩质量
-                        using (var ep = new EncoderParameters())
-                        {
-                            using (var eParam = new EncoderParameter(Encoder.Quality, new long[] { quality }))
-                            {
-                                ep.Param[0] = eParam;
-                                try
-                                {
-                                    ImageCodecInfo[] arrayIci = ImageCodecInfo.GetImageEncoders();
-                                    ImageCodecInfo jpegIcIinfo = arrayIci.FirstOrDefault(t => t.FormatDescription.Equals("JPEG"));
-                                    if (jpegIcIinfo != null)
-                                    {
-                                        bmp.Save(dFile, jpegIcIinfo, ep);//dFile是压缩后的新路径
-                                        FileInfo fi = new FileInfo(dFile);
-                                        if (fi.Length > 1024 * size && quality > 10)
-                                        {
-                                            quality -= 10;
-                                            CompressImage(sFile, dFile, quality, size, false);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        bmp.Save(dFile, tFormat);
-                                    }
-                                    return true;
-                                }
-                                catch
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 无损压缩图片
-        /// </summary>
-        /// <param name="src">原图片文件流</param>
-        /// <param name="dest">压缩后图片文件流</param>
-        /// <param name="quality">压缩质量（数字越小压缩率越高）1-100</param>
-        /// <param name="size">压缩后图片的最大大小</param>
-        /// <param name="sfsc">是否是第一次调用</param>
-        /// <returns></returns>
-        public static bool CompressImage(Stream src, Stream dest, byte quality = 90, int size = 1024, bool sfsc = true)
-        {
-            //如果是第一次调用，原始图像的大小小于要压缩的大小，则直接复制文件，并且返回true
-            if (sfsc && src.Length < size * 1024)
-            {
-                src.CopyTo(dest);
-                return true;
-            }
-
-            using (Image imgSource = Image.FromStream(src))
-            {
-                ImageFormat tFormat = imgSource.RawFormat;
-                int dHeight = imgSource.Height;
-                int dWidth = imgSource.Width;
-                int sW, sH;
-                //按比例缩放
-                Size temSize = new Size(imgSource.Width, imgSource.Height);
-                if (temSize.Width > dHeight || temSize.Width > dWidth)
-                {
-                    if ((temSize.Width * dHeight) > (temSize.Width * dWidth))
-                    {
-                        sW = dWidth;
-                        sH = (dWidth * temSize.Height) / temSize.Width;
-                    }
-                    else
-                    {
-                        sH = dHeight;
-                        sW = (temSize.Width * dHeight) / temSize.Height;
-                    }
-                }
-                else
-                {
-                    sW = temSize.Width;
-                    sH = temSize.Height;
-                }
-
-                using (Bitmap bmp = new Bitmap(dWidth, dHeight))
-                {
-                    using (Graphics g = Graphics.FromImage(bmp))
-                    {
-                        g.Clear(Color.WhiteSmoke);
-                        g.CompositingQuality = CompositingQuality.HighQuality;
-                        g.SmoothingMode = SmoothingMode.HighQuality;
-                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        g.DrawImage(imgSource, new Rectangle((dWidth - sW) / 2, (dHeight - sH) / 2, sW, sH), 0, 0, imgSource.Width, imgSource.Height, GraphicsUnit.Pixel);
-
-                        //以下代码为保存图片时，设置压缩质量
-                        using (var ep = new EncoderParameters())
-                        {
-                            using (var eParam = new EncoderParameter(Encoder.Quality, new long[] { quality }))
-                            {
-                                ep.Param[0] = eParam;
-                                try
-                                {
-                                    ImageCodecInfo[] arrayIci = ImageCodecInfo.GetImageEncoders();
-                                    ImageCodecInfo jpegIcIinfo = arrayIci.FirstOrDefault(t => t.FormatDescription.Equals("JPEG"));
-                                    if (jpegIcIinfo != null)
-                                    {
-                                        bmp.Save(dest, jpegIcIinfo, ep);//dFile是压缩后的新路径
-                                        if (dest.Length > 1024 * size && quality > 10)
-                                        {
-                                            quality -= 10;
-                                            CompressImage(src, dest, quality, size, false);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        bmp.Save(dest, tFormat);
-                                    }
-                                    return true;
-                                }
-                                catch
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        #endregion
+        #endregion                
 
         #region 生成缩略图
 
@@ -281,6 +85,7 @@ namespace SinGooCMS.Utility
         #endregion
 
         #region 生成水印图
+
         /// <summary>
         /// 生成图片水印
         /// </summary>
@@ -288,33 +93,30 @@ namespace SinGooCMS.Utility
         /// <param name="watermarkImage">水印图文件路径</param>
         /// <param name="watermarkPosition">水印位置，默认正中间</param>
         /// <param name="alpha">透明度，默认0.5</param>
+        /// <param name="watermarkFilePath">水印图片保存路径，不填写则自动创建</param>
         /// <returns></returns>
-        public static string AddImageWatermark(string originalImagePath, string watermarkImage, WatermarkPosition watermarkPosition = WatermarkPosition.MiddleCenter, float alpha = 0.5f) =>
-            AddWatermark(originalImagePath, "图片水印", watermarkImage, string.Empty, 0, string.Empty, string.Empty, watermarkPosition, alpha);
+        public static string AddImageWatermark(string originalImagePath, string watermarkImage, WatermarkPosition watermarkPosition = WatermarkPosition.MiddleCenter, float alpha = 0.5f, string watermarkFilePath = "") =>
+            AddWatermark(originalImagePath, "图片水印", watermarkImage, string.Empty, 0, string.Empty, string.Empty, watermarkPosition, alpha, watermarkFilePath);
 
         /// <summary>
         /// 生成文字水印
         /// </summary>
-        /// <param name="originalImagePath"></param>
-        /// <param name="watermarkText"></param>
-        /// <param name="fontColor"></param>
-        /// <param name="fontFamily"></param>
-        /// <param name="watermarkPosition"></param>
-        /// <param name="alpha"></param>
+        /// <param name="originalImagePath">原图文件路径</param>
+        /// <param name="watermarkText">水印文本</param>
+        /// <param name="fontColor">文字颜色</param>
+        /// <param name="fontFamily">文本字体</param>
+        /// <param name="watermarkPosition">水印位置</param>
+        /// <param name="alpha">透明度</param>
+        /// <param name="watermarkFilePath">水印图片保存路径，不填写则自动创建</param>
         /// <returns></returns>
-        public static string AddTextWatermark(string originalImagePath, string watermarkText, string fontColor = "#ff0000", string fontFamily = "黑体", WatermarkPosition watermarkPosition = WatermarkPosition.MiddleCenter, float alpha = 0.2f)
+        public static string AddTextWatermark(string originalImagePath, string watermarkText, string fontColor = "#ff0000", string fontFamily = "黑体", WatermarkPosition watermarkPosition = WatermarkPosition.MiddleCenter, float alpha = 0.2f, string watermarkFilePath = "")
         {
-            //文字大小 按原图的1/10
+            //文字大小 按原图的3/10
             var img = Image.FromFile(originalImagePath);
             if (img != null)
             {
-                int fontSize = img.Width;
-                if (img.Height < img.Width)
-                    fontSize = img.Height;
-
-                fontSize = (int)(fontSize * 0.1);
-
-                return AddWatermark(originalImagePath, "文字水印", string.Empty, watermarkText, fontSize, fontColor, fontFamily, watermarkPosition, alpha);
+                int fontSize = ((img.Width / watermarkText.Length * 1.0) * 0.3).ToInt();
+                return AddWatermark(originalImagePath, "文字水印", string.Empty, watermarkText, fontSize, fontColor, fontFamily, watermarkPosition, alpha, watermarkFilePath);
             }
 
             return string.Empty;
@@ -323,21 +125,22 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// 生成文字水印
         /// </summary>
-        /// <param name="originalImagePath"></param>        
-        /// <param name="watermarkText"></param>
-        /// <param name="fontSize"></param>
-        /// <param name="fontColor"></param>
-        /// <param name="fontFamily"></param>
-        /// <param name="watermarkPosition"></param>
-        /// <param name="alpha"></param>
+        /// <param name="originalImagePath">原图文件路径</param>        
+        /// <param name="watermarkText">水印文本</param>
+        /// <param name="fontSize">文字大小</param>
+        /// <param name="fontColor">文字颜色</param>
+        /// <param name="fontFamily">文本字体</param>
+        /// <param name="watermarkPosition">水印位置</param>
+        /// <param name="alpha">透明度</param>
+        /// <param name="watermarkFilePath">水印图片保存路径，不填写则自动创建</param>
         /// <returns></returns>
-        public static string AddTextWatermark(string originalImagePath, string watermarkText, int fontSize, string fontColor, string fontFamily, WatermarkPosition watermarkPosition = WatermarkPosition.MiddleCenter, float alpha = 0.5f) =>
-            AddWatermark(originalImagePath, "文字水印", string.Empty, watermarkText, fontSize, fontColor, fontFamily, watermarkPosition, alpha);
+        public static string AddTextWatermark(string originalImagePath, string watermarkText, int fontSize, string fontColor, string fontFamily, WatermarkPosition watermarkPosition = WatermarkPosition.MiddleCenter, float alpha = 0.5f, string watermarkFilePath = "") =>
+            AddWatermark(originalImagePath, "文字水印", string.Empty, watermarkText, fontSize, fontColor, fontFamily, watermarkPosition, alpha, watermarkFilePath);
 
         /// <summary>
         /// 生成水印图
         /// </summary>
-        /// <param name="originalImagePath">源图绝对路径</param>
+        /// <param name="originalImagePath">源图绝对路径</param>        
         /// <param name="watermarkType">水印类型:文字水印,图片水印</param>        
         /// <param name="watermarkImage">水印图绝对路径</param>
         /// <param name="watermarkText">水印文字</param>
@@ -346,9 +149,10 @@ namespace SinGooCMS.Utility
         /// <param name="fontFamily">字体</param>
         /// <param name="watermarkPosition">水印位置</param>
         /// <param name="alpha">透明度</param>
+        /// <param name="watermarkFilePath">水印图片保存路径，不填写则自动创建</param>  
         /// <returns></returns>
         public static string AddWatermark(string originalImagePath, string watermarkType, string watermarkImage
-            , string watermarkText, int fontSize, string fontColor, string fontFamily, WatermarkPosition watermarkPosition, float alpha)
+            , string watermarkText, int fontSize, string fontColor, string fontFamily, WatermarkPosition watermarkPosition, float alpha, string watermarkFilePath = "")
         {
             Image img = Image.FromFile(originalImagePath);
             // 封装 GDI+ 位图，此位图由图形图像及其属性的像素数据组成。   
@@ -366,7 +170,8 @@ namespace SinGooCMS.Utility
             //文件扩展名
             string strExt = Path.GetExtension(originalImagePath);
             //生成的水印图文件名
-            string strWatermarkFile = originalImagePath.Replace(strExt, "_watermark" + strExt);
+            if (watermarkFilePath.IsNullOrEmpty())
+                watermarkFilePath = originalImagePath.Replace(strExt, "_watermark" + strExt);
 
             ImageAttributes imageAttributes = new ImageAttributes();
             ColorMap colorMap = new ColorMap();
@@ -477,11 +282,11 @@ namespace SinGooCMS.Utility
 
             if (ici != null)
             {
-                bmPhoto.Save(strWatermarkFile, ici, encoderParams);
+                bmPhoto.Save(watermarkFilePath, ici, encoderParams);
             }
             else
             {
-                bmPhoto.Save(strWatermarkFile);
+                bmPhoto.Save(watermarkFilePath);
             }
 
             g.Dispose();
@@ -490,7 +295,7 @@ namespace SinGooCMS.Utility
                 watermark.Dispose();
             imageAttributes.Dispose();
 
-            return strWatermarkFile;
+            return watermarkFilePath;
         }
 
         #endregion

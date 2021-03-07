@@ -16,6 +16,7 @@ namespace CoreTest
             string path = "/";
             Console.WriteLine(SystemUtils.GetMapPath()); //当前绝对路径
             Console.WriteLine(SystemUtils.GetMapPath("/upload")); //当前绝对路径
+            Console.WriteLine(SystemUtils.GetMapPath("/upload/1.txt")); //当前绝对路径
             Console.WriteLine("桌面：" + SystemUtils.Desktop);
             Console.WriteLine("收藏夹：" + SystemUtils.Favorites);
             Console.WriteLine("我的文档：" + SystemUtils.MyDocuments);

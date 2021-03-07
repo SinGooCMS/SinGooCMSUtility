@@ -20,6 +20,8 @@ namespace SinGooCMS.Utility.Extension
 
         /// <summary>
         /// 执行方法
+        /// <para>调用普通方法：InvokeMethod("GetCount", null, new object[] { "Entity","" })</para>
+        /// <para>调用泛型方法：InvokeMethod("Find", new Type[] { typeof(EntityInfo) }, new object[] { 1 })</para>
         /// </summary>
         /// <param name="obj">实例对象</param>
         /// <param name="methodName">方法名称，区分大小写</param>
@@ -55,52 +57,20 @@ namespace SinGooCMS.Utility.Extension
             return objResult; //无返回值的方法 这里返回null
         }
 
-        #endregion 方法调用
+        #endregion
 
         #region 属性与字段、成员读写
 
-        /// <summary>
-        /// 设置字段
-        /// </summary>
-        /// <param name="obj">反射对象</param>
-        /// <param name="name">字段名</param>
-        /// <param name="value">值</param>
-        public static void SetField(this object obj, string name, object value) =>
-            obj.GetType().GetField(name).SetValue(obj, value);
+        #region 属性 Property
 
         /// <summary>
-        /// 获取字段
+        /// 读取属性
         /// </summary>
-        /// <param name="obj">反射对象</param>
-        /// <param name="name">字段名</param>
-        /// <typeparam name="T">约束返回的T必须是引用类型</typeparam>
-        /// <returns>T类型</returns>
-        public static T GetField<T>(this object obj, string name) =>
-            (T)obj.GetType().GetField(name).GetValue(obj);
-
-        /// <summary>
-        /// 获取所有的字段信息
-        /// </summary>
-        /// <param name="obj">反射对象</param>
-        /// <returns>字段信息</returns>
-        public static FieldInfo[] GetFields(this object obj)
-        {
-            FieldInfo[] fieldInfos = obj.GetType().GetFields(bindingFlags);
-            return fieldInfos;
-        }
-
-        /// <summary>
-        /// 设置属性
-        /// </summary>
-        /// <param name="obj">反射对象</param>
-        /// <param name="name">属性名</param>
-        /// <param name="value">值</param>
-        public static void SetProperty(this object obj, string name, object value)
-        {
-            PropertyInfo propertyInfo = obj.GetType().GetProperty(name, bindingFlags);
-            object objValue = Convert.ChangeType(value, propertyInfo.PropertyType);
-            propertyInfo.SetValue(obj, objValue, null);
-        }
+        /// <param name="obj"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static PropertyInfo GetProperty(this object obj, string name) =>
+            obj.GetType().GetProperty(name, bindingFlags);
 
         /// <summary>
         /// 获取属性值
@@ -109,11 +79,63 @@ namespace SinGooCMS.Utility.Extension
         /// <param name="name">属性名</param>
         /// <typeparam name="T">约束返回的T必须是引用类型</typeparam>
         /// <returns>T类型</returns>
-        public static T GetProperty<T>(this object obj, string name)
+        public static T GetPropertyVal<T>(this object obj, string name) =>
+            (T)obj.GetProperty(name).GetValue(obj, null);
+
+        /// <summary>
+        /// 设置属性值
+        /// </summary>
+        /// <param name="obj">反射对象</param>
+        /// <param name="name">属性名</param>
+        /// <param name="value">值</param>
+        public static void SetPropertyVal(this object obj, string name, object value)
         {
-            PropertyInfo propertyInfo = obj.GetType().GetProperty(name, bindingFlags);
-            return (T)propertyInfo.GetValue(obj, null);
+            var propertyInfo = obj.GetProperty(name);
+            object objValue = Convert.ChangeType(value, propertyInfo.PropertyType);
+            propertyInfo.SetValue(obj, objValue, null);
         }
+
+        #endregion
+
+        #region 字段 Field
+
+        /// <summary>
+        /// 读取字段信息
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static FieldInfo GetField(this object obj, string name) =>
+            obj.GetType().GetField(name, bindingFlags);
+
+        /// <summary>
+        /// 获取所有的字段信息
+        /// </summary>
+        /// <param name="obj">反射对象</param>
+        /// <returns>字段信息</returns>
+        public static FieldInfo[] GetFields(this object obj) =>
+            obj.GetType().GetFields(bindingFlags);
+
+        /// <summary>
+        /// 获取字段
+        /// </summary>
+        /// <param name="obj">反射对象</param>
+        /// <param name="name">字段名</param>
+        /// <typeparam name="T">约束返回的T必须是引用类型</typeparam>
+        /// <returns>T类型</returns>
+        public static T GetFieldVal<T>(this object obj, string name) =>
+            (T)obj.GetField(name).GetValue(obj);
+
+        /// <summary>
+        /// 设置字段
+        /// </summary>
+        /// <param name="obj">反射对象</param>
+        /// <param name="name">字段名</param>
+        /// <param name="value">值</param>
+        public static void SetFieldVal(this object obj, string name, object value) =>
+            obj.GetField(name).SetValue(obj, value);
+
+        #endregion
 
         #endregion
 
@@ -122,13 +144,13 @@ namespace SinGooCMS.Utility.Extension
         /// <summary>
         /// 根据资源名称获取图片资源流
         /// </summary>
-        /// <param name="_"></param>
-        /// <param name="resourceName">资源的名称</param>
-        /// <returns>数据流</returns>
-        public static Stream GetImageResource(this Assembly _, string resourceName)
+        /// <param name="assemblyType"></param>
+        /// <param name="resourceName"></param>
+        /// <returns></returns>
+        public static Stream GetImageResource(this Type assemblyType, string resourceName)
         {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            return asm.GetManifestResourceStream(resourceName);
+            Assembly thisAssembly = Assembly.GetAssembly(assemblyType);
+            return thisAssembly.GetManifestResourceStream(resourceName);
         }
 
         /// <summary>
@@ -179,6 +201,6 @@ namespace SinGooCMS.Utility.Extension
             return (bytes != null) ? Encoding.GetEncoding(charset).GetString(bytes) : "";
         }
 
-        #endregion 资源获取
+        #endregion
     }
 }

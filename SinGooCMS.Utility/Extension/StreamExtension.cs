@@ -22,7 +22,7 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        ///
+        /// 将流转换为数组
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
@@ -38,43 +38,21 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// 以文件流的形式复制大文件
-        /// </summary>
-        /// <param name="fs">源</param>
-        /// <param name="dest">目标地址</param>
-        /// <param name="bufferSize">缓冲区大小，默认8MB</param>
-        public static void CopyToFile(this Stream fs, string dest, int bufferSize = 1024 * 8 * 1024)
-        {
-            using (var fsWrite = new FileStream(dest, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                byte[] buf = new byte[bufferSize];
-                int len;
-                while ((len = fs.Read(buf, 0, buf.Length)) != 0)
-                {
-                    fsWrite.Write(buf, 0, len);
-                }
-            }
-        }
-
-        /// <summary>
         /// 以文件流的形式复制大文件(异步方式)
         /// </summary>
         /// <param name="fs">源</param>
         /// <param name="dest">目标地址</param>
         /// <param name="bufferSize">缓冲区大小，默认8MB</param>
-        public static async void CopyToFileAsync(this Stream fs, string dest, int bufferSize = 1024 * 1024 * 8)
+        public static async Task CopyToFileAsync(this Stream fs, string dest, int bufferSize = 1024 * 1024 * 8)
         {
             using (var fsWrite = new FileStream(dest, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
                 byte[] buf = new byte[bufferSize];
                 int len;
-                await Task.Run(() =>
+                while ((len = await fs.ReadAsync(buf, 0, buf.Length)) != 0)
                 {
-                    while ((len = fs.Read(buf, 0, buf.Length)) != 0)
-                    {
-                        fsWrite.Write(buf, 0, len);
-                    }
-                }).ConfigureAwait(true);
+                    await fsWrite.WriteAsync(buf, 0, len);
+                }
             }
         }
 
@@ -83,13 +61,13 @@ namespace SinGooCMS.Utility.Extension
         /// </summary>
         /// <param name="ms"></param>
         /// <param name="filename"></param>
-        public static void SaveFile(this MemoryStream ms, string filename)
+        public static async Task SaveFile(this MemoryStream ms, string filename)
         {
             using (var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
                 byte[] buffer = ms.ToArray(); // 转化为byte格式存储
-                fs.Write(buffer, 0, buffer.Length);
-                fs.Flush();
+                await fs.WriteAsync(buffer, 0, buffer.Length);
+                await fs.FlushAsync();
             }
         }
     }

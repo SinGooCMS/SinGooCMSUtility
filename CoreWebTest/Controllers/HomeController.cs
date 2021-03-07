@@ -30,11 +30,15 @@ namespace CoreWebTest.Controllers
 
             var builder = new StringBuilder("测试如下：\r\n");
 
+            //Post
+            builder.Append($"Post值:{WebUtils.GetFormVal<string>("a")}\r\n");
+
             //IP
             builder.Append($"IP:{IPUtils.GetIP()}\r\n");
 
             //WebUtils
-            builder.Append($"pid:{WebUtils.GetQueryInt("pid")}\r\n"); //?pid=1
+            builder.Append($"pid:{WebUtils.GetQueryVal<int>("pid")}\r\n"); //?pid=1
+            builder.Append($"date:{WebUtils.GetQueryVal<DateTime>("date", new DateTime(1900, 1, 1))}\r\n"); //?date=2020-12-31
             //全url
             builder.Append($"全URL：{WebUtils.GetAbsoluteUri()}\r\n");
 

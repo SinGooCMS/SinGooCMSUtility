@@ -10,7 +10,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 字符串处理
     /// </summary>
-    public static class StringUtils
+    public sealed class StringUtils
     {
         #region 获取汉字拼音的第一个字母
 
@@ -94,12 +94,11 @@ namespace SinGooCMS.Utility
         /// <param name="len"></param>
         /// <param name="appendString"></param>
         /// <returns></returns>
-        public static string Cut(string sourceStr, int len, string appendString = "")
+        public static string Cut(string sourceStr, int len, string appendString = "...")
         {
-            if (sourceStr.Length >= len)
-                return sourceStr.Substring(0, len) + appendString;
-
-            return sourceStr;
+            return sourceStr.Length >= len
+                ? sourceStr.Substring(0, len) + appendString
+                : sourceStr;
         }
 
         /// <summary>
@@ -142,11 +141,19 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// 替换sql语句中的有问题符号
+        /// 替换单引号到双引号
         /// </summary>
         public static string ChkSQL(string str)
         {
-            return (str == null) ? "" : str.Replace("'", "''");
+            /*
+             * 在执行拼接sql语句时需要特别注意 sql注入
+             * 如 ExecSQL(" select * from Student where UserName='"+inputVal+"' ");
+             * 假如 inputVal="';use master;exec sp_addlogin 'admin','123';select '1";
+             * 那么sql语句相当于：select * from Student where UserName='';use master;exec sp_addlogin 'admin','123';select '1'
+             * 解决的办法：1）参数化 2）替换单引号 在SQL查询中两个单引号表示 一个单引号
+             */
+
+            return str.Replace("'", "''");
         }
 
         #endregion
@@ -155,14 +162,16 @@ namespace SinGooCMS.Utility
 
         /// <summary>
         /// 在由正则表达式模式定义的位置拆分输入字符串。
-        /// </summary>
-        /// <param name="pattern"></param>
+        /// </summary>        
         /// <param name="input"></param>
+        /// <param name="pattern"></param>
+        /// <param name="ignoreCase"></param>
         /// <returns></returns>
-        public static string[] Split(string pattern, string input)
+        public static string[] Split(string input, string pattern, bool ignoreCase = false)
         {
-            Regex regex = new Regex(pattern);
-            return regex.Split(input);
+            return ignoreCase
+            ? Regex.Split(input, pattern, RegexOptions.IgnoreCase)
+            : Regex.Split(input, pattern);
         }
 
         #endregion
@@ -174,7 +183,7 @@ namespace SinGooCMS.Utility
         /// </summary>
         /// <returns></returns>
         public static string GetNewFileName() =>
-            DateTime.Now.ToString("yyyyMMddffff") + GetRandomString(8);
+            DateTime.Now.ToString("yyyyMMdd") + GetRandomString(12);
 
         /// <summary>
         /// 生成一个全数字随机数(默认10位)，可以用来生成6位验证码
@@ -268,7 +277,7 @@ namespace SinGooCMS.Utility
 
         #region 生成编号
         /// <summary>
-        /// 生成编号${year}${month}${day}${hour}${minute}${second}${millisecond}${rnd}
+        /// 按年月随机数生成编号${year}${month}${day}${hour}${minute}${second}${millisecond}${rnd}
         /// </summary>
         /// <param name="SNFormat"></param>
         /// <returns></returns>

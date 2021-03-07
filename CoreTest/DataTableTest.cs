@@ -1,15 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using System.Text;
+using NUnit.Framework;
 using System.Data;
+using SinGooCMS.Utility;
 using SinGooCMS.Utility.Extension;
 using System.Collections.Generic;
 
-namespace NTFxTest
+namespace CoreTest
 {
-    [TestClass]
-    public class DateTableTest
+    public class DataTableTest
     {
-        [TestMethod]
+        [Test]
         public void DtToObject()
         {
             DataTable dt = new DataTable();
@@ -26,18 +27,18 @@ namespace NTFxTest
             dr2["Age"] = 20;
             dt.Rows.Add(dr2);
 
-            var lst = dt.ToEntities<Student>();
+            var lst = dt.ToEntities<StudentInfo>();
             Assert.AreEqual("jsonlee", lst[0].UserName);
 
         }
 
-        [TestMethod]
+        [Test]
         public void ObjToDt()
         {
-            var lst = new List<Student>();
-            lst.AddRange(new Student[] {
-                new Student(){ UserName="jsonlee",Age=18 },
-                new Student(){ UserName="刘备",Age=20}
+            var lst = new List<StudentInfo>();
+            lst.AddRange(new StudentInfo[] {
+                new StudentInfo(){ UserName="jsonlee",Age=18 },
+                new StudentInfo(){ UserName="刘备",Age=20}
             });
 
             var dt = lst.ToDataTable();

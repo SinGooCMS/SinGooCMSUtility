@@ -9,7 +9,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 执行系统进程
     /// </summary>
-    public class ProcessUtils
+    public sealed class ProcessUtils
     {
         /*  命令列:rundll32.exe user.exe,restartwindows 
             功能: 系统重启

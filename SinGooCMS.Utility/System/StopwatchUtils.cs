@@ -6,7 +6,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 计数器帮助类
     /// </summary>
-    public static class StopwatchUtils
+    public sealed class StopwatchUtils
     {
         /// <summary>
         /// 执行方法

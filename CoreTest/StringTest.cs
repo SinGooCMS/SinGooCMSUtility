@@ -60,10 +60,10 @@ namespace CoreTest
             Console.WriteLine("掩码："+"17788760902".Mask()); //掩码：177****0902
             Assert.AreEqual(" 我是 江 西人".RemoveWhiteSpace(), "我是江西人");
             Console.WriteLine($"6位纯数字验证码:{StringUtils.GetRandomNumber(6)}");
-            Console.WriteLine($"6位纯数字验证码:{StringUtils.GetRandomNumber(6)}");
-            Console.WriteLine($"6位纯数字验证码:{StringUtils.GetRandomNumber(6)}");
-            Console.WriteLine($"6位纯数字验证码:{StringUtils.GetRandomNumber(6)}");
-            Console.WriteLine($"6位纯数字验证码:{StringUtils.GetRandomNumber(6)}");
+
+            //正则分割
+            string str = "今天天气可能不错，后天可能会下雪，年前可能出太阳";
+            Console.WriteLine(StringUtils.Split(str,"可能").ToJson());
         }
     }
 }

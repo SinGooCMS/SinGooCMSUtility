@@ -8,7 +8,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 图形验证码工具
     /// </summary>
-    public class CaptchaUtils
+    public sealed class CaptchaUtils
     {
         #region 公共属性
 

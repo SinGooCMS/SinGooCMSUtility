@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace SinGooCMS.Utility
 {
-
     /// <summary>
     /// 读取纯真IP数据库，定位IP地址
     /// </summary>

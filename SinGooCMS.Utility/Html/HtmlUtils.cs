@@ -10,7 +10,7 @@ namespace SinGooCMS.Utility.Html
     /// <summary>
     /// html工具类
     /// </summary>
-    public static partial class HtmlUtils
+    public static class HtmlUtils
     {
         private static readonly HtmlSanitizer Sanitizer = new HtmlSanitizer();
 

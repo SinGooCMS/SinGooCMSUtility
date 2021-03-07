@@ -6,7 +6,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// 视频剪切工具.上传视频后可截取视频存储为图片,注意要调用文件：ffmpeg.exe
     /// </summary>
-    public class VideoUtils
+    public sealed class VideoUtils
     {
         #region 公共属性
 
