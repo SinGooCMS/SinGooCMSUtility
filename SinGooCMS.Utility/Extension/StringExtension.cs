@@ -280,7 +280,40 @@ namespace SinGooCMS.Utility.Extension
                 return Regex.Replace(str, "(.{1}).*", $"$1{masks}");
         }
 
-        #endregion       
+        #endregion
+
+        #region 判断是否包含
+
+        /// <summary>
+        /// 加入分割符
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="splitter">分割符，默认是,</param>
+        /// <returns></returns>
+        public static string JoinSplitter(this string str, string splitter = ",")
+        {
+            if (!str.StartsWith(splitter))
+                str = splitter + str;
+            if (!str.EndsWith(splitter))
+                str = str + splitter;
+
+            return str;
+        }
+
+        /// <summary>
+        /// 是否包含,如"1,2,34,5".ContainsWithSplitter("3")=false
+        /// <para>如 "1,2,34,5".Contains("3")=true，实际需求是",1,2,34,5,".Contains(",3,")=false</para>
+        /// </summary>
+        /// <param name="source">源字符串</param>
+        /// <param name="target">需要判断是否存在于源的字符串</param>
+        /// <param name="splitter">分割符，默认是,</param>
+        /// <returns></returns>
+        public static bool ContainsWithSplitter(this string source, string target, string splitter = ",")
+        {
+            return source.JoinSplitter(splitter).Contains(target.JoinSplitter(splitter));
+        }
+
+        #endregion
 
     }
 }

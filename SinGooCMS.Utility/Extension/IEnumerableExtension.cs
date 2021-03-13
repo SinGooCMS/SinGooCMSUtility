@@ -56,6 +56,17 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
+        /// 一维数组转字符串
+        /// </summary>
+        /// <param name="array">数组</param>
+        /// <param name="separator">分割符</param>
+        /// <returns></returns>
+        public static string ToSplitterString(this object[] array, string separator = ",")
+        {
+            return string.Join(separator, array);
+        }
+
+        /// <summary>
         /// 打乱集合元素顺序
         /// </summary>
         /// <typeparam name="T"></typeparam>

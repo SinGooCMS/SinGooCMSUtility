@@ -196,6 +196,29 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
+        /// ids字符串转数组，默认分割符是',',如 "1,2,3" 转 int[]{1,2,3}
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ids"></param>
+        /// <param name="splitter"></param>
+        /// <returns></returns>
+        public static T[] ToSpliterArray<T>(this string ids, char splitter = ',')
+        {
+            var result = new List<T>();
+            if (!ids.IsNullOrEmpty())
+            {
+                string[] arr = ids.Split(splitter);
+                foreach (string item in arr)
+                {
+                    if (item.Trim().Length > 0)
+                        result.Add(item.To<T>());
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
         /// ids字符串转整型数组,如 "1,2,3" 转 int[]{1,2,3}
         /// </summary>
         /// <param name="ids">带分隔符的字符串</param>
@@ -203,21 +226,7 @@ namespace SinGooCMS.Utility.Extension
         /// <returns></returns>
         public static int[] ToIntArray(this string ids, char splitter = ',')
         {
-            var result = new List<int>();
-
-            if (!ids.IsNullOrEmpty())
-            {
-                string[] arr = ids.Split(splitter);
-                foreach (string item in arr)
-                {
-                    if (int.TryParse(item, out int outValue))
-                    {
-                        result.Add(outValue);
-                    }
-                }
-            }
-
-            return result.ToArray();
+            return ids.ToSpliterArray<int>(splitter);
         }
 
         #endregion

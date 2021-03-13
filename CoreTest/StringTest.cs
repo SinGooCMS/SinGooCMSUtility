@@ -56,14 +56,21 @@ namespace CoreTest
         [Test]
         public void TestOther()
         {
-            Console.WriteLine("转人民币："+135.83m.ToRMB()); //转人民币：壹佰叁拾伍圆捌角叁分
-            Console.WriteLine("掩码："+"17788760902".Mask()); //掩码：177****0902
+            Console.WriteLine("转人民币：" + 135.83m.ToRMB()); //转人民币：壹佰叁拾伍圆捌角叁分
+            Console.WriteLine("掩码：" + "17788760902".Mask()); //掩码：177****0902
             Assert.AreEqual(" 我是 江 西人".RemoveWhiteSpace(), "我是江西人");
             Console.WriteLine($"6位纯数字验证码:{StringUtils.GetRandomNumber(6)}");
 
             //正则分割
             string str = "今天天气可能不错，后天可能会下雪，年前可能出太阳";
-            Console.WriteLine(StringUtils.Split(str,"可能").ToJson());
+            Console.WriteLine(StringUtils.Split(str, "可能").ToJson());
+
+            string[] array = { "1", "2", "34", "5" };
+            Console.WriteLine("数组转字符串:" + array.ToSplitterString());
+
+            //判断是否包含
+            Assert.AreEqual(false, "1,2,34,5".ContainsWithSplitter("3"));
+            Assert.AreEqual(true, "1,2,34,5".ContainsWithSplitter("5"));
         }
     }
 }

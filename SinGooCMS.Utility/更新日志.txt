@@ -1,4 +1,5 @@
-﻿1）更新ObjectExtension扩展方法DeepClone
+﻿--v1.5
+1）更新ObjectExtension扩展方法DeepClone
 2）ReflectionUtil 改成 ReflectionUtils
 3）DataTableExtension增加方法FindRow，增加方法RemoveEmptyRow
 4）扩展类DataTypeChangeExtension的原方法ToIntArray(this string ids)增加参数ToIntArray(this string ids, char splitter = ',')
@@ -9,3 +10,4 @@
 9）优化工具类WebUtils
 10）解决扩展类DataTypeChangeExtension小数转整数的BUG，整数转小数时将截断小数部分
 11）优化扩展类ImageExtension，增加等比压缩方法CompressRate，等宽压缩方法CompressWidth，等高压缩方法CompressHeight
+12）扩展类StringExtension增加方法ContainsWithSplitter

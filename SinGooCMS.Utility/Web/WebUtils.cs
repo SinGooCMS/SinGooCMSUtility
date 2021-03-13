@@ -71,8 +71,7 @@ namespace SinGooCMS.Utility
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defalutValue"></param>
-        /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
+        /// <returns></returns>        
         public static string GetQueryString(string key, string defalutValue = "")
         {
 #if NETSTANDARD2_1
@@ -101,7 +100,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static int GetQueryInt(string key, int defaultValue = 0)
         {
             return GetQueryString(key).ToInt(defaultValue);
@@ -113,7 +111,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static bool GetQueryBool(string key, bool defaultValue = false)
         {
             return GetQueryString(key).ToBool(defaultValue);
@@ -125,7 +122,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static long GetQueryLong(string key, long defaultValue = 0)
         {
             return GetQueryString(key).ToLong(defaultValue);
@@ -137,7 +133,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static float GetQueryFloat(string key, float defaultValue = 0.0f)
         {
             return GetQueryString(key).ToFloat(defaultValue);
@@ -149,7 +144,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static double GetQueryDouble(string key, double defaultValue = 0.0d)
         {
             return GetQueryString(key).ToDouble(defaultValue);
@@ -161,18 +155,16 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static decimal GetQueryDecimal(string key, decimal defaultValue = 0.0m)
         {
             return GetQueryString(key).ToDecimal(defaultValue);
         }
 
         /// <summary>
-        /// 读取query值
+        /// 读取query值并转化为Datetime类型，默认是1900-1-1
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static DateTime GetQueryDatetime(string key)
         {
             return GetQueryString(key).ToDateTime();
@@ -184,7 +176,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetQueryVal 代替")]
         public static DateTime GetQueryDatetime(string key, DateTime defaultValue)
         {
             return GetQueryString(key).ToDateTime(defaultValue);
@@ -254,7 +245,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defalutValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static string GetFormString(string key, string defalutValue = "")
         {
 #if NETSTANDARD2_1
@@ -283,7 +273,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static int GetFormInt(string key, int defaultValue = 0)
         {
             return GetFormString(key).ToInt(defaultValue);
@@ -295,7 +284,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static bool GetFormBool(string key, bool defaultValue = false)
         {
             return GetFormString(key).ToBool(defaultValue);
@@ -307,7 +295,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static float GetFormFloat(string key, float defaultValue = 0.0f)
         {
             return GetFormString(key).ToFloat(defaultValue);
@@ -319,7 +306,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static double GetFormDouble(string key, double defaultValue = 0.0d)
         {
             return GetFormString(key).ToDouble(defaultValue);
@@ -331,18 +317,16 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static decimal GetFormDecimal(string key, decimal defaultValue = 0.0m)
         {
             return GetFormString(key).ToDecimal(defaultValue);
         }
 
         /// <summary>
-        /// 读取form值
+        /// 读取form值并转化为Datetime类型，默认是1900-1-1
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static DateTime GetFormDatetime(string key)
         {
             return GetFormString(key).ToDateTime();
@@ -354,7 +338,6 @@ namespace SinGooCMS.Utility
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        [Obsolete("已过期，请用方法 GetFormVal 代替")]
         public static DateTime GetFormDatetime(string key, DateTime defaultValue)
         {
             return GetFormString(key).ToDateTime(defaultValue);

@@ -170,7 +170,19 @@ namespace CoreTest
             Console.WriteLine("url:" + dict.ToUrlSearch());
 
             var urlText = "username=%E5%88%98%E5%A4%87&age=18";
-            Console.WriteLine("username:" + urlText.ToUrlDictionary()["username"]);            
+            Console.WriteLine("username:" + urlText.ToUrlDictionary()["username"]);
         }
-    }    
+
+        [Test]
+        public void SpliterTest()
+        {
+            var str = "1,22,3,44,55";
+            var arr = str.ToIntArray();
+            Assert.AreEqual(5, arr.Length);
+
+            var str2 = "true,false,true,true";
+            var arr2 = str2.ToSpliterArray<bool>();
+            Assert.AreEqual(true, arr2[3]);
+        }
+    }
 }

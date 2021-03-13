@@ -65,6 +65,13 @@ namespace NTFxTest
             //正则分割
             string str = "今天天气可能不错，后天可能会下雪，年前可能出太阳";
             Console.WriteLine(StringUtils.Split(str, "可能").ToJson());
+
+            string[] array = { "1","2","34","5"};
+            Console.WriteLine("数组转字符串:" + array.ToSplitterString());
+
+            //判断是否包含
+            Assert.AreEqual(false, "1,2,34,5".ContainsWithSplitter("3"));
+            Assert.AreEqual(true, "1,2,34,5".ContainsWithSplitter("5"));
         }
     }
 }
