@@ -270,8 +270,6 @@ namespace SinGooCMS.Utility
         {
             if (dir.IndexOf(@"\") != -1 && !dir.EndsWith(@"\"))
                 dir += @"\";
-            else if (dir.IndexOf(@"\\") != -1 && !dir.EndsWith(@"\\"))
-                dir += @"\\";
             else if (dir.IndexOf(@"/") != -1 && !dir.EndsWith(@"/"))
                 dir += @"/";
 

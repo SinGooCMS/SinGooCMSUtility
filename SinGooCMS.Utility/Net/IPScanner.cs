@@ -31,9 +31,10 @@ namespace SinGooCMS.Utility
         /// <summary>
         /// IP位置查找器
         /// </summary>
-        public IPScanner()
+        /// <param name="dbPath">纯真数据库地址，默认是：/ipdata/qqwry.dat</param>
+        public IPScanner(string dbPath = "/ipdata/qqwry.dat")
         {
-            dataPath = SystemUtils.GetMapPath("/IPData/QQWry.Dat");
+            dataPath = SystemUtils.GetMapPath(dbPath);
         }
 
         #endregion

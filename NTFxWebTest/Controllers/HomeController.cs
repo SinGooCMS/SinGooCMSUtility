@@ -48,7 +48,19 @@ namespace NTFxWebTest.Controllers
             SessionUtils.SetSession("username", "刘备");
             builder.Append($"username session: {SessionUtils.GetSession<string>("username")}  <br/>\r\n");
 
+            builder.Append($"mobile client : {SystemUtils.IsMobileClient.Value} <br/>\r\n");
+            builder.Append($"weixin client : {SystemUtils.IsWeixinClient.Value} <br/>\r\n");
+
+            builder.Append($"is iphone : {SystemUtils.IsIphone.Value} <br/>\r\n");
+            builder.Append($"is android : {SystemUtils.IsAndroid.Value} <br/>\r\n");
+
             return Content(builder.ToString());
+        }
+
+        [Route("/home/test")]
+        public ActionResult Test()
+        {
+            return Content(WebUtils.GetUrlPathPart());
         }
     }
 }

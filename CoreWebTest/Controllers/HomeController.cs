@@ -67,7 +67,24 @@ namespace CoreWebTest.Controllers
             SessionUtils.SetSession("username", System.Web.HttpUtility.UrlEncode("刘备"));
             builder.Append($"username session: {System.Web.HttpUtility.UrlDecode(SessionUtils.GetSession("username"))} \r\n");
 
+            //客户端判断
+            builder.Append($"windows os : {SystemUtils.IsWindows.Value} \r\n");
+            builder.Append($"linux os : {SystemUtils.IsLinux.Value} \r\n");
+            builder.Append($"mac os : {SystemUtils.IsMacOs.Value} \r\n");
+
+            builder.Append($"mobile client : {SystemUtils.IsMobileClient.Value} \r\n");
+            builder.Append($"weixin client : {SystemUtils.IsWeixinClient.Value} \r\n");
+
+            builder.Append($"is iphone : {SystemUtils.IsIphone.Value} \r\n");
+            builder.Append($"is android : {SystemUtils.IsAndroid.Value} \r\n");
+
             return Content(builder.ToString());
+        }
+
+        [Route("/home/test")]
+        public IActionResult Test()
+        {
+            return Content(WebUtils.GetUrlPathPart());
         }
     }
 }

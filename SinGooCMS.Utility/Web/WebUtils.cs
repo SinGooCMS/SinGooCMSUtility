@@ -348,7 +348,25 @@ namespace SinGooCMS.Utility
         #region 其它
 
         /// <summary>
-        /// 获取url地址
+        /// 读取url的path部分，如 /home/index?abc=1
+        /// </summary>
+        /// <returns></returns>
+        public static string GetUrlPathPart()
+        {
+#if NETSTANDARD2_1
+            var request = UtilsBase.Request;
+            return new StringBuilder()
+                .Append(request.PathBase)
+                .Append(request.Path)
+                .Append(request.QueryString)
+                .ToString();
+#else
+            return UtilsBase.Request.Url.PathAndQuery;
+#endif
+        }
+
+        /// <summary>
+        /// 获取url完整地址
         /// </summary>
         /// <returns></returns>
         public static string GetAbsoluteUri()
@@ -368,7 +386,6 @@ namespace SinGooCMS.Utility
 #endif
         }
 
-        #endregion
+#endregion
     }
 }
-
