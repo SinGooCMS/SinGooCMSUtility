@@ -4,6 +4,9 @@ using System.Data;
 using SinGooCMS.Utility.Extension;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
+using SinGooCMS.Utility;
+using System.ComponentModel;
 
 namespace NTFxTest
 {
@@ -127,6 +130,26 @@ namespace NTFxTest
             var user2 = user.DeepClone();
             Assert.AreEqual(user.UserName, user2.UserName);
             Assert.AreEqual(false, user2.ReferenceEquals(user)); //深度copy后，两个对象引用不同的内存空间
+
+            var animal = new Animal() { Name = "动物", Description = "动物会动" };
+            var dog = animal.MapTo<Animal, Dog>((x) =>
+            {
+                x.Class = "犬科";
+                return x;
+            });
+
+            Assert.AreEqual("犬科", dog.Class);
+
+            var animals = new List<Animal> {
+               new Animal() { Name = "动物", Description = "动物会动" }
+            };
+            var dogs = animals.MapToList<Animal, Dog>((x) =>
+            {
+                x.ForEach(d => d.Class = "犬科");
+                return x;
+            });
+
+            Assert.AreEqual("犬科", (dogs.ToList())[0].Class);
         }
 
         [TestMethod]
@@ -167,10 +190,57 @@ namespace NTFxTest
             var dict = new Dictionary<string, string>();
             dict.Add("username", "刘备");
             dict.Add("age", "18");
+
+            Assert.AreEqual("刘备", dict.GetValue(0));
             Console.WriteLine("url:" + dict.ToUrlSearch());
 
             var urlText = "username=%E5%88%98%E5%A4%87&age=18";
             Console.WriteLine("username:" + urlText.ToUrlDictionary()["username"]);
         }
+
+        [TestMethod]
+        public void UriTest()
+        {
+            string url = "http://www.singoo.top/?a=你好&b=今天&c=天气&d=不错&e=123";
+            var lst = new Uri(url).ParseQueryString();
+
+            Assert.AreEqual("不错",lst.ToList()[3].Value);
+
+            var lst2 = new Uri(url).AddParametersToQueryString("temp", "abc").ParseQueryString().ToList();
+            Assert.AreEqual("abc", lst2.Last().Value);
+        }
+
+        public enum AdsType
+        {
+            [System.ComponentModel.Description("文本广告")]
+            Text,
+            [System.ComponentModel.Description("图片广告")]
+            Images,
+            [System.ComponentModel.Description("Flash广告")]
+            Flash,
+            [System.ComponentModel.Description("视频广告")]
+            Video
+        }
+
+        [TestMethod]
+        public void TestEnum()
+        {
+            AdsType type1=AdsType.Text;
+            Assert.AreEqual("文本广告", type1.GetDescription());
+
+            string type2 = "Text";
+            Assert.AreEqual(type2.ToEnum<AdsType>().GetType(),typeof(AdsType));
+        }
+    }
+
+    public class Animal
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class Dog : Animal
+    {
+        public string Class { get; set; }
     }
 }

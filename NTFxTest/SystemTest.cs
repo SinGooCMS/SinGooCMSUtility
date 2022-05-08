@@ -28,5 +28,21 @@ namespace NTFxTest
 
             //ProcessUtils.Shutdown();
         }
+
+        [TestMethod]
+        public void SetStartItem()
+        {
+            //软件设置开机自启动
+            RegistryUtils.SetRunValue("CTTools", @"D:\MyDev\CTTool\CTTool.v1.2\CTTools.exe");
+
+            //这个键是否添加了
+            var regKey = RegistryUtils.GetRunValue("CTTools");
+            Assert.IsTrue(regKey != null);
+
+            //取消开机自启动
+            RegistryUtils.DeleteRunValue("CTTools");
+            var regKey2 = RegistryUtils.GetRunValue("CTTools");
+            Assert.IsTrue(regKey2 == null);
+        }
     }
 }

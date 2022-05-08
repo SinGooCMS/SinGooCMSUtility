@@ -3,6 +3,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace SinGooCMS.Utility.Extension
 {
@@ -42,17 +43,61 @@ namespace SinGooCMS.Utility.Extension
             await Task.Run(() => Parallel.ForEach(objs, action));
         }
 
-        #endregion AsyncForEach
+        #endregion AsyncForEach        
 
         /// <summary>
-        /// 转为数据表
+        /// 指定实体集合转DataTable
+        /// <para>custColHeader 第一参数是key，第二个参数是要显示的名称</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="lst"></param>
+        /// <typeparam name="T">实体</typeparam>
+        /// <param name="list">实体集合</param>
+        /// <param name="custColHeader">自定义表头</param>
         /// <returns></returns>
-        public static DataTable ToDataTable<T>(this IEnumerable<T> lst)
+        public static DataTable ToDataTable<T>(this IEnumerable<T> list, IDictionary<string, string> custColHeader = null)
         {
-            return lst.ToList().ToDataTable();
+            var table = new DataTable();
+            //创建列头
+            var propertys = typeof(T).GetProperties();
+            foreach (var pi in propertys)
+            {
+                var pt = pi.PropertyType;
+                if (pt.IsGenericType && (pt.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                {
+                    pt = pt.GetGenericArguments()[0];
+                }
+
+                if (custColHeader != null && custColHeader.Count > 0)
+                {
+                    if (custColHeader.ContainsKey(pi.Name))
+                        table.Columns.Add(new DataColumn(custColHeader[pi.Name], pt)); //自定义表头
+                }
+                else
+                    table.Columns.Add(new DataColumn(pi.Name, pt));
+            }
+            //创建数据行
+            if (list.Count() <= 0) return table;
+            {
+                foreach (var item in list)
+                {
+                    var tempList = new ArrayList();
+                    foreach (var pi in propertys)
+                    {
+                        if (custColHeader != null && custColHeader.Count > 0)
+                        {
+                            if (custColHeader.ContainsKey(pi.Name))
+                                tempList.Add(pi.GetValue(item, null));
+                        }
+                        else
+                        {
+                            tempList.Add(pi.GetValue(item, null));
+                        }
+                    }
+
+                    var array = tempList.ToArray();
+                    table.LoadDataRow(array, true);
+                }
+            }
+            return table;
         }
 
         /// <summary>
@@ -64,6 +109,19 @@ namespace SinGooCMS.Utility.Extension
         public static string ToSplitterString(this object[] array, string separator = ",")
         {
             return string.Join(separator, array);
+        }
+
+        /// <summary>
+        /// 将当前集合中的元素根据指定的分隔符(<paramref name="separator"/>)拼接成字符串
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sequence"></param>
+        /// <param name="separator"></param>
+        /// <returns></returns>
+        public static string ToSplitterString<T>(this IEnumerable<T> sequence, string separator)
+        {
+            if (!sequence.Any()) { return string.Empty; }
+            return string.Join(separator, sequence);
         }
 
         /// <summary>
@@ -84,6 +142,21 @@ namespace SinGooCMS.Utility.Extension
             }
             temp.RemoveAll(new Predicate<T>((t) => { return !arr.Contains(t); }));
             return temp;
+        }
+
+        /// <summary>
+		/// 从一个列表中随机选择对象
+		/// </summary>
+		/// <typeparam name="T">队列数据类型</typeparam>
+		/// <param name="list">列表</param>
+		/// <param name="random">使用的随机种子。如果使用null，则会新建一个</param>
+		/// <returns>获得的结果</returns>
+		public static T RandomTake<T>(this List<T> list, Random random = null)
+        {
+            if (list == null || list.Count == 0)
+                return default(T);
+
+            return list[(random ?? new Random()).Next(list.Count)];
         }
 
         /// <summary>
@@ -208,7 +281,7 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
-        /// 转HashSet
+        /// 转HashSet,不重复的集合
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TResult"></typeparam>

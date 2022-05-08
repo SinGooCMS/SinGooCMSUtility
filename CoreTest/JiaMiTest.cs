@@ -10,7 +10,7 @@ namespace CoreTest
 {
     public class JiaMiTest
     {
-        string key = "jsonlee@singoo.top";
+        string key = "jasonlee@singoo.top--20220501abc-中国广东深圳-0987654321";
         string txt = "123456";
 
         [Test]
@@ -23,9 +23,9 @@ namespace CoreTest
             Assert.AreEqual(txt, DEncryptUtils.DESDecrypt(desEncode, key));
 
             //aes
-            string aesEncode = DEncryptUtils.AESEncrypt(txt);
+            string aesEncode = DEncryptUtils.AESEncrypt(txt, key);
             Console.WriteLine("aes加密值：" + aesEncode);
-            Assert.AreEqual(txt, DEncryptUtils.AESDecrypt(aesEncode));
+            Assert.AreEqual(txt, DEncryptUtils.AESDecrypt(aesEncode, key));
 
             //base64
             string base64Encode = DEncryptUtils.Base64Encrypt(txt);

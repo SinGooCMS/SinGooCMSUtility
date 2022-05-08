@@ -13,7 +13,19 @@ namespace SinGooCMS.Utility.Extension
     /// </summary>
     public static class DataTableExtension
     {
-        #region dt和对象之间互转
+        /// <summary>
+        /// 获得一个去重的新表
+        /// </summary>
+        /// <param name="table">源表</param>
+        /// <param name="arrFilter">新表字段</param>
+        /// <returns></returns>
+        public static DataTable ToDistinctTable(this DataTable table, string[] arrFilter)
+        {
+            var dv = table.AsDataView();
+            return dv.ToTable(true, arrFilter);
+        }
+
+        #region DataTable转对象
 
         /// <summary>
         /// DataTable转实体
@@ -52,7 +64,7 @@ namespace SinGooCMS.Utility.Extension
         /// <typeparam name="T">实体</typeparam>
         /// <param name="table">DataTable实例</param>
         /// <returns></returns>
-        public static List<T> ToEntities<T>(this DataTable table) where T : new()
+        public static IEnumerable<T> ToEnumerable<T>(this DataTable table) where T : class, new()
         {
             var entities = new List<T>();
             if (table == null)
@@ -80,76 +92,38 @@ namespace SinGooCMS.Utility.Extension
             return entities;
         }
 
+        #endregion
+
+        #region dt转arraylist
 
         /// <summary>
-        /// 指定集合转DataTable
+        /// dt转arraylist
         /// </summary>
-        /// <param name="list">指定集合</param>
+        /// <param name="table"></param>
         /// <returns></returns>
-        public static DataTable ToDataTable(this IList list)
+        public static ArrayList ToArrayList(this DataTable table)
         {
-            var table = new DataTable();
-            if (list.Count <= 0) return table;
-            var propertys = list[0].GetType().GetProperties();
-            foreach (var pi in propertys)
+            ArrayList array = new ArrayList();
+            if (table != null && table.Rows.Count > 0)
             {
-                var pt = pi.PropertyType;
-                if (pt.IsGenericType && (pt.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    pt = pt.GetGenericArguments()[0];
-                }
-                table.Columns.Add(new DataColumn(pi.Name, pt));
-            }
-            foreach (var item in list)
-            {
-                var tempList = new ArrayList();
-                foreach (var pi in propertys)
-                {
-                    var obj = pi.GetValue(item, null);
-                    tempList.Add(obj);
-                }
-                var array = tempList.ToArray();
-                table.LoadDataRow(array, true);
-            }
-            return table;
-        }
-
-        /// <summary>
-        /// 指定实体集合转DataTable
-        /// </summary>
-        /// <typeparam name="T">实体</typeparam>
-        /// <param name="list">实体集合</param>
-        /// <returns></returns>
-        public static DataTable ToDataTable<T>(this List<T> list)
-        {
-            var table = new DataTable();
-            //创建列头
-            var propertys = typeof(T).GetProperties();
-            foreach (var pi in propertys)
-            {
-                var pt = pi.PropertyType;
-                if (pt.IsGenericType && (pt.GetGenericTypeDefinition() == typeof(Nullable<>)))
-                {
-                    pt = pt.GetGenericArguments()[0];
-                }
-                table.Columns.Add(new DataColumn(pi.Name, pt));
-            }
-            //创建数据行
-            if (list.Count <= 0) return table;
-            {
-                foreach (var item in list)
-                {
-                    var tempList = new ArrayList();
-                    foreach (var pi in propertys)
+                    DataRow row = table.Rows[i];
+                    Hashtable record = new Hashtable();
+                    for (int j = 0; j < table.Columns.Count; j++)
                     {
-                        var obj = pi.GetValue(item, null);
-                        tempList.Add(obj);
+                        object cellValue = row[j];
+                        if (cellValue.GetType() == typeof(DBNull))
+                        {
+                            cellValue = null;
+                        }
+                        record[table.Columns[j].ColumnName] = cellValue;
                     }
-                    var array = tempList.ToArray();
-                    table.LoadDataRow(array, true);
+                    array.Add(record);
                 }
             }
-            return table;
+
+            return array;
         }
 
         #endregion
@@ -214,6 +188,96 @@ namespace SinGooCMS.Utility.Extension
             return dt;
         }
 
-        #endregion        
+        #endregion
+
+        #region 列处理
+
+        /// <summary>
+        /// 更换列名
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="newColNames"></param>
+        /// <returns></returns>
+        public static DataTable ChangeColNames(this DataTable table, Dictionary<string, string> newColNames)
+        {
+            foreach (DataColumn col in table.Columns)
+            {
+                if (newColNames.Any(p => p.Key == col.ColumnName))
+                {
+                    col.ColumnName = newColNames[col.ColumnName]; //换成新的列名，比如说导出的excel列头要有意义的中文名
+                }
+            }
+
+            return table;
+        }
+
+        #endregion
+
+        #region datatable写入excel
+
+        /// <summary>
+        /// Datatable写入excel
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="excelFileFullPath"></param>
+        /// <param name="sheetName"></param>
+        public static void SaveToExcel(this DataTable table, string excelFileFullPath, string sheetName = "sheet1") =>
+           NPOIUtils.Save(table, excelFileFullPath, sheetName);
+
+        /// <summary>
+        /// Datatable写入excel
+        /// </summary>
+        /// <param name="tables"></param>
+        /// <param name="excelFileFullPath"></param>
+        public static void SaveToExcel(this Dictionary<string, DataTable> tables, string excelFileFullPath) =>
+            NPOIUtils.Save(tables, excelFileFullPath);
+
+        #endregion
+
+        #region datatable写入csv
+
+        /// <summary>
+        /// datatable写入csv
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="csvFileFullPath"></param>
+        /// <param name="encoding"></param>
+        public static void SaveToCsv(this DataTable table, string csvFileFullPath, string encoding = "utf-8") =>
+            CsvUtils.Write(table, csvFileFullPath, encoding);
+
+        /// <summary>
+        /// datatable写入csv
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="csvFileFullPath"></param>
+        /// <param name="encoding"></param>
+        public static async Task SaveToCsvAsync(this DataTable table, string csvFileFullPath, string encoding = "utf-8") =>
+            await CsvUtils.WriteAsync(table, csvFileFullPath, encoding);
+
+        /// <summary>
+        /// datatable写入csv
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="csvFileFullPath"></param>
+        /// <param name="encoding"></param>
+        public static void SaveToCsv<T>(this DataTable table, string csvFileFullPath, string encoding = "utf-8") where T : class, new()
+        {
+            CsvUtils.Write<T>(table.ToEnumerable<T>(), csvFileFullPath, encoding);
+        }
+
+        /// <summary>
+        /// datatable写入csv
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="csvFileFullPath"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public static async Task SaveToCsvAsync<T>(this DataTable table, string csvFileFullPath, string encoding = "utf-8") where T : class, new()
+        {
+            await CsvUtils.WriteAsync<T>(table.ToEnumerable<T>(), csvFileFullPath, encoding);
+        }
+
+        #endregion
     }
 }

@@ -2,8 +2,12 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.International.Converters.PinYinConverter;
-using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
 using SinGooCMS.Utility.Extension;
+#if NETSTANDARD2_1
+using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
+#else
+using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
+#endif
 
 namespace SinGooCMS.Utility
 {
@@ -70,7 +74,12 @@ namespace SinGooCMS.Utility
         /// <returns>繁体字</returns> 
         public static string GetTraditional(string str)
         {
+#if NETSTANDARD2_1
             return ChineseConverter.Convert(str, ChineseConversionDirection.SimplifiedToTraditional);//转繁体
+#else
+            return ChineseConverter.Convert(str, ChineseConversionDirection.SimplifiedToTraditional);//转繁体
+#endif
+
         }
 
         /// <summary> 
@@ -80,7 +89,11 @@ namespace SinGooCMS.Utility
         /// <returns>简体字</returns> 
         public static string GetSimplified(string str)
         {
+#if NETSTANDARD2_1
             return ChineseConverter.Convert(str, ChineseConversionDirection.TraditionalToSimplified);//转简体
+#else
+            return ChineseConverter.Convert(str, ChineseConversionDirection.TraditionalToSimplified);//转简体
+#endif
         }
 
         #endregion
@@ -231,7 +244,7 @@ namespace SinGooCMS.Utility
         /// <returns></returns>
         public static string GetGUID()
         {
-            return System.Guid.NewGuid().ToString();
+            return System.Guid.NewGuid().ToString().Replace("-", "");
         }
         #endregion
 
@@ -273,20 +286,52 @@ namespace SinGooCMS.Utility
 
             return builder.ToString();
         }
-        #endregion                
+        #endregion
 
         #region 生成编号
+
+        private const string FULLFOMART = "${year}${month}${day}${hour}${minute}${second}${millisecond}${rnd}";
+        private const string NORMALFORMAT = "${year}${month}${day}${millisecond}${rnd}";
+        private const string SHORTFORMAT = "${year}${month}${day}${rnd}";
+
+        public enum SNType
+        {
+            FULLFOMART,
+            NORMALFORMAT,
+            SHORTFORMAT
+        }
+
         /// <summary>
         /// 按年月随机数生成编号${year}${month}${day}${hour}${minute}${second}${millisecond}${rnd}
         /// </summary>
         /// <param name="SNFormat"></param>
         /// <returns></returns>
-        public static string GenerateSN(string SNFormat)
+        public static string GenerateSN(string SNFormat, SNType? snType = null)
         {
+            if (SNFormat.IsNullOrEmpty() && snType == null)
+                return null;
+
+            if (SNFormat.IsNullOrEmpty() && snType != null)
+            {
+                switch (snType)
+                {
+                    case SNType.FULLFOMART:
+                        SNFormat = FULLFOMART;
+                        break;
+                    case SNType.NORMALFORMAT:
+                        SNFormat = NORMALFORMAT;
+                        break;
+                    case SNType.SHORTFORMAT:
+                        SNFormat = SHORTFORMAT;
+                        break;
+                }
+            }
+
             return SNFormat.Replace("${year}", System.DateTime.Now.ToString("yyyy")).Replace("${month}", System.DateTime.Now.ToString("MM"))
                 .Replace("${day}", System.DateTime.Now.ToString("dd")).Replace("${hour}", System.DateTime.Now.ToString("HH"))
                 .Replace("${minute}", System.DateTime.Now.ToString("mm")).Replace("${second}", System.DateTime.Now.ToString("ss"))
                 .Replace("${millisecond}", System.DateTime.Now.ToString("ffff")).Replace("${rnd}", StringUtils.GetRandomString(3));
+
         }
         #endregion
 

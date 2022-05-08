@@ -202,7 +202,17 @@ namespace SinGooCMS.Utility.Extension
         /// <param name="ids"></param>
         /// <param name="splitter"></param>
         /// <returns></returns>
-        public static T[] ToSpliterArray<T>(this string ids, char splitter = ',')
+        public static T[] ToSpliterArray<T>(this string ids, char splitter = ',') =>
+            ids.ToSpliterList<T>(splitter).ToArray();
+
+        /// <summary>
+        /// ids字符串转数组，默认分割符是',',如 "1,2,3" 转 int[]{1,2,3}
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ids"></param>
+        /// <param name="splitter"></param>
+        /// <returns></returns>
+        public static List<T> ToSpliterList<T>(this string ids, char splitter = ',')
         {
             var result = new List<T>();
             if (!ids.IsNullOrEmpty())
@@ -215,7 +225,7 @@ namespace SinGooCMS.Utility.Extension
                 }
             }
 
-            return result.ToArray();
+            return result;
         }
 
         /// <summary>

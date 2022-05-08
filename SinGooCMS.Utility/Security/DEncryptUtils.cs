@@ -2,6 +2,8 @@
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SinGooCMS.Utility
 {
@@ -66,64 +68,76 @@ namespace SinGooCMS.Utility
 
         #endregion
 
-        #region AES        
+        #region AES    
+
+        /// <summary>
+        /// 获取Aes32位密钥
+        /// </summary>
+        /// <param name="key">Aes密钥字符串</param>
+        /// <returns>Aes32位密钥</returns>
+        private static byte[] GetAesKey(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("key", "Aes密钥不能为空");
+            }
+            if (key.Length < 32)
+            {
+                // 不足32补全
+                key = key.PadRight(32, '0');
+            }
+            if (key.Length > 32)
+            {
+                key = key.Substring(0, 32);
+            }
+            return Encoding.UTF8.GetBytes(key);
+        }
 
         /// <summary>
         /// AES加密
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">要加密的文本</param>
+        /// <param name="key">key</param>
         /// <returns></returns>
-        public static string AESEncrypt(string text)
+        public static string AESEncrypt(string text,string key)
         {
-            Rijndael rijndael = Rijndael.Create();
-            byte[] buffer = new byte[] {
-                0xa6, 0x7d, 0xe1, 0x3f, 0x35, 14, 0xe1, 0xa9, 0x83, 0xa5, 0x62, 170, 0x7a, 0xae, 0x79, 0x98,
-                0xa7, 0x33, 0x49, 0xff, 230, 0xae, 0xbf, 0x8d, 0x8d, 0x20, 0x8a, 0x49, 0x31, 0x3a, 0x12, 0x40
-             };
-            byte[] buffer2 = new byte[] { 0xf8, 0x8b, 1, 0xfb, 8, 0x85, 0x9a, 0xa4, 190, 0x45, 40, 0x56, 3, 0x42, 0xf6, 0x19 };
-            rijndael.Key = buffer;
-            rijndael.IV = buffer2;
-            MemoryStream stream = new MemoryStream();
-            ICryptoTransform transform = new ToBase64Transform();
-            CryptoStream stream2 = new CryptoStream(stream, transform, CryptoStreamMode.Write);
-            CryptoStream stream3 = new CryptoStream(stream2, rijndael.CreateEncryptor(), CryptoStreamMode.Write);
-            UTF8Encoding encoding = new UTF8Encoding();
-            byte[] bytes = encoding.GetBytes(text);
-            stream3.Write(bytes, 0, bytes.Length);
-            stream3.FlushFinalBlock();
-            byte[] buffer4 = new byte[stream.Length];
-            stream.Position = 0;
-            stream.Read(buffer4, 0, (int)stream.Length);
-            return encoding.GetString(buffer4);
+            using (AesCryptoServiceProvider aesProvider = new AesCryptoServiceProvider())
+            {
+                aesProvider.Key = GetAesKey(key);
+                aesProvider.Mode = CipherMode.ECB;
+                aesProvider.Padding = PaddingMode.PKCS7;
+                using (ICryptoTransform cryptoTransform = aesProvider.CreateEncryptor())
+                {
+                    byte[] inputBuffers = Encoding.UTF8.GetBytes(text);
+                    byte[] results = cryptoTransform.TransformFinalBlock(inputBuffers, 0, inputBuffers.Length);
+                    aesProvider.Clear();
+                    aesProvider.Dispose();
+                    return Convert.ToBase64String(results, 0, results.Length);
+                }
+            }
         }
 
         /// <summary>
         /// AES解密
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">要解密的文本</param>
+        /// <param name="key">key</param>
         /// <returns></returns>
-        public static string AESDecrypt(string text)
+        public static string AESDecrypt(string text,string key)
         {
-            Rijndael rijndael = Rijndael.Create();
-            byte[] buffer = new byte[] {
-                0xa6, 0x7d, 0xe1, 0x3f, 0x35, 14, 0xe1, 0xa9, 0x83, 0xa5, 0x62, 170, 0x7a, 0xae, 0x79, 0x98,
-                0xa7, 0x33, 0x49, 0xff, 230, 0xae, 0xbf, 0x8d, 0x8d, 0x20, 0x8a, 0x49, 0x31, 0x3a, 0x12, 0x40
-             };
-            byte[] buffer2 = new byte[] { 0xf8, 0x8b, 1, 0xfb, 8, 0x85, 0x9a, 0xa4, 190, 0x45, 40, 0x56, 3, 0x42, 0xf6, 0x19 };
-            rijndael.Key = buffer;
-            rijndael.IV = buffer2;
-            MemoryStream stream = new MemoryStream();
-            CryptoStream stream2 = new CryptoStream(stream, rijndael.CreateDecryptor(), CryptoStreamMode.Write);
-            ICryptoTransform transform = new FromBase64Transform();
-            CryptoStream stream3 = new CryptoStream(stream2, transform, CryptoStreamMode.Write);
-            UTF8Encoding encoding = new UTF8Encoding();
-            byte[] bytes = encoding.GetBytes(text);
-            stream3.Write(bytes, 0, bytes.Length);
-            stream3.FlushFinalBlock();
-            byte[] buffer4 = new byte[stream.Length];
-            stream.Position = 0;
-            stream.Read(buffer4, 0, (int)stream.Length);
-            return encoding.GetString(buffer4);
+            using (AesCryptoServiceProvider aesProvider = new AesCryptoServiceProvider())
+            {
+                aesProvider.Key = GetAesKey(key);
+                aesProvider.Mode = CipherMode.ECB;
+                aesProvider.Padding = PaddingMode.PKCS7;
+                using (ICryptoTransform cryptoTransform = aesProvider.CreateDecryptor())
+                {
+                    byte[] inputBuffers = Convert.FromBase64String(text);
+                    byte[] results = cryptoTransform.TransformFinalBlock(inputBuffers, 0, inputBuffers.Length);
+                    aesProvider.Clear();
+                    return Encoding.UTF8.GetString(results);
+                }
+            }
         }
 
         #endregion
@@ -176,6 +190,47 @@ namespace SinGooCMS.Utility
             }
 
             return (new UnicodeEncoding()).GetString(bStr).TrimEnd('\0');
+        }
+
+        #endregion
+
+        #region Base36
+
+        private const string Base36Characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        /// <summary>
+        /// 将给定的数字编码为字符串。
+        /// </summary>
+        /// <param name="input">要编码的数字。</param>
+        /// <returns>编码 <paramref name="input"/> 为字符串。</returns>
+        public static string Base36Encode(long input)
+        {
+            var arr = Base36Characters.ToCharArray();
+            var result = new Stack<char>();
+            while (input != 0)
+            {
+                result.Push(arr[input % 36]);
+                input /= 36;
+            }
+            return new string(result.ToArray());
+        }
+
+        /// <summary>
+        /// 将编码的字符串解码为长整数。
+        /// </summary>
+        /// <param name="input">要解码的数字。</param>
+        /// <returns>解码 <paramref name="input"/> 为长整数。</returns> 
+        public static long Base36Decode(string input)
+        {
+            var reversed = input.ToUpper().Reverse();
+            long result = 0;
+            var pos = 0;
+            foreach (var c in reversed)
+            {
+                result += Base36Characters.IndexOf(c) * (long)Math.Pow(36, pos);
+                pos++;
+            }
+            return result;
         }
 
         #endregion

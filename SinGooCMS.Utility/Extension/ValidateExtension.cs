@@ -25,6 +25,30 @@ namespace SinGooCMS.Utility.Extension
         }
 
         /// <summary>
+        /// 是否null或者空格
+        /// </summary>
+        /// <param name="thisValue"></param>
+        /// <returns></returns>
+        public static bool IsNullOrWhiteSpace(this object thisValue)
+        {
+            return thisValue != null && !string.IsNullOrWhiteSpace(thisValue.ToString())
+                ? false
+                : true;
+        }
+
+        /// <summary>
+        /// 非null而且有值（非空格）
+        /// </summary>
+        /// <param name="thisValue"></param>
+        /// <returns></returns>
+        public static bool IsNotNullOrEmpty(this object thisValue)
+        {
+            return thisValue != null && thisValue.ToString().Trim() != "" && !thisValue.ToString().Trim().IsNullOrWhiteSpace()
+                ? true
+                : false;
+        }
+
+        /// <summary>
         /// 判断是否json格式字符串
         /// </summary>
         /// <param name="txtJson"></param>

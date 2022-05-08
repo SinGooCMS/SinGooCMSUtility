@@ -5,6 +5,7 @@ using System.IO;
 using System.Web;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace SinGooCMS.Utility
 {
@@ -13,6 +14,12 @@ namespace SinGooCMS.Utility
     /// </summary>
     public sealed class SystemUtils
     {
+        /// <summary>
+        /// 获取当前进程运行持续的时间
+        /// </summary>
+        public static TimeSpan GetProcessStartupDuration() =>
+            DateTime.Now.Subtract(Process.GetCurrentProcess().StartTime);
+
         #region 系统目录
 
         /// <summary>
@@ -32,6 +39,11 @@ namespace SinGooCMS.Utility
         /// </summary>
         public static string MyDocuments =>
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        /// <summary>
+        /// 应用程序执行目录(多线程中也有效)
+        /// </summary>
+        public static string BaseDir => AppDomain.CurrentDomain.BaseDirectory;
 
         #endregion
 

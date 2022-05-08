@@ -11,15 +11,6 @@ namespace SinGooCMS.Utility
     /// </summary>
     public sealed class ProcessUtils
     {
-        /*  命令列:rundll32.exe user.exe,restartwindows 
-            功能: 系统重启
-            命令列:rundll32.exe user.exe,exitwindows
-            功能: 关闭系统
-
-            cmd关机命令 shutdown -s -t 60
-            cmd取消关机 shutdown -a
-         */
-
         #region 服务
 
         /// <summary>

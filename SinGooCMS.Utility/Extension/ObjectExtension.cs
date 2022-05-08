@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using AutoMapper;
 
 namespace SinGooCMS.Utility.Extension
 {
@@ -9,6 +11,59 @@ namespace SinGooCMS.Utility.Extension
     /// </summary>
     public static class ObjectExtension
     {
+        #region AutoMapper
+
+        /// <summary>
+        /// 单个对象映射
+        /// </summary>
+        /// <typeparam name="TSource">源对象</typeparam>
+        /// <typeparam name="TDestination">目标对象</typeparam>
+        /// <param name="source"></param>
+        /// <param name="thenDeal">自动匹配后的处理</param>
+        /// <returns></returns>
+        public static TDestination MapTo<TSource, TDestination>(this TSource source, Func<TDestination, TDestination> thenDeal = null)
+            where TDestination : class
+            where TSource : class
+        {
+            if (source == null) return default(TDestination);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap(typeof(TSource), typeof(TDestination)));
+            var mapper = config.CreateMapper();
+
+            var result = mapper.Map<TDestination>(source);
+            if (thenDeal != null)
+                result = thenDeal(result);
+
+            return result;
+        }
+
+        /// <summary>
+        ///  集合列表类型映射  
+        /// </summary>
+        /// <typeparam name="TSource">源对象</typeparam>
+        /// <typeparam name="TDestination">目标对象</typeparam>
+        /// <param name="source"></param>
+        /// <param name="thenDeal">自动匹配后的处理</param>
+        /// <returns></returns>
+        public static IEnumerable<TDestination> MapToList<TSource, TDestination>(this IEnumerable<TSource> source, Func<IEnumerable<TDestination>, IEnumerable<TDestination>> thenDeal = null)
+            where TDestination : class
+            where TSource : class
+        {
+            if (source == null) return default(IEnumerable<TDestination>);
+
+            Type sourceType = source.GetType().GetGenericArguments()[0];  //获取枚举的成员类型
+            var config = new MapperConfiguration(cfg => cfg.CreateMap(sourceType, typeof(TDestination)));
+            var mapper = config.CreateMapper();
+
+            var result = mapper.Map<IEnumerable<TDestination>>(source);
+            if (thenDeal != null)
+                result = thenDeal(result);
+
+            return result;
+        }
+
+        #endregion
+
         /// <summary>
         /// 深度克隆，注意T必须是 Serializable
         /// </summary>

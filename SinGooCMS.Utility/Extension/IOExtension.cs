@@ -15,6 +15,14 @@ namespace SinGooCMS.Utility.Extension
         #region 文件流
 
         /// <summary>
+        /// 转为base64字符串
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <returns></returns>
+        public static string ToBase64String(this FileStream fileStream)
+            =>Base64FileUtils.ReadFileToString(fileStream);
+
+        /// <summary>
         /// byte[] 转为stream
         /// </summary>
         /// <param name="bytes">参数</param>

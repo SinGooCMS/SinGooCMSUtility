@@ -19,6 +19,17 @@ namespace NTFxTest
         readonly string className = "SinGooCMS.Ado.DbAccess.SqlServerAccess";
 
         [TestMethod]
+        public void TestAssembly()
+        {
+            var assembly = ReflectionUtils.Load("SinGooCMS.Ado.dll");
+            Console.WriteLine(assembly.GetAssemblyCodeBase()); //找目录
+            Console.WriteLine(assembly.GetAssemblyLocation()); //找目录
+            Console.WriteLine(assembly.GetFrameworkVersion()); //找版本
+            Console.WriteLine(assembly.IsOptimized()); //是否Release
+            Console.WriteLine(assembly.Is32Bit()); //是否32位
+        }
+
+        [TestMethod]
         public void TestInstance()
         {
             //创建实例
@@ -66,6 +77,6 @@ namespace NTFxTest
             model.SetFieldVal("score", 99);
             builder.Append($"读取字段值：{model.score} \r\n");
             Console.WriteLine(builder.ToString());
-        }
+        }        
     }
 }

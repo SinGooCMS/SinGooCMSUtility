@@ -12,3 +12,34 @@
 11）优化扩展类ImageExtension，增加等比压缩方法CompressRate，等宽压缩方法CompressWidth，等高压缩方法CompressHeight
 12）扩展类StringExtension增加方法ContainsWithSplitter
 13）增加工具类SystemUtils在.net core下的的系统判断：windows/linux/mac os，以及浏览器的客户端判断
+
+--v1.6
+1）去掉QRCoder，去掉HtmlAgilityPack
+2）增加访问器Accessors，可以通过字符串形式读取属性等
+3）增加AdoUtils，实现sqlserver的实体自动参数化
+4）增加CsvUtils，用于csv文件的读写，使用了第三方组件 - CsvHelper
+5）增加身份证解析工具IdCardUtils，使用IdCardUtils.Parse("362133xxxxxxxxx").Sex
+5）增加NPOI相关工具类NPOIUtils，用于操作excel等文件
+6）扩展类增加
+	a)托管组件扩展 AssemblyExtensions
+	b)特性扩展AttributeExtension，目前仅有显示名称扩展DisplayExtAttribute，实现优先使用资源名称
+	c)DataTableExtension增加N个新的扩展
+	d)DictionaryExtension 实现用下标取值
+	e)EnumExtension 可以快速读取枚举的描述，和从字符串转枚举类型
+	f)增加 TaskExtensions
+	g)增加 TypeExtensions
+	h)增加 UriExtensions
+7）增加JsonFileUtils，用于存取Json配置等文件，线程安全的
+8）增加base64和文件互转工具 - Base64FileUtils
+9）增加PredicateBuilder，用于生成linq谓词(条件)
+10）增加派生类SinGooList、SinGooArray、SinGooDictionary，可用下标，下标范围取值
+11）增加邮件发送工具 - MailUtils
+12）增加分页扩展QueryExtension，以及分页栏工具PagerUtils
+13）增加非托管dll调用工具LibInvoker
+14）增加Api调用结果类 - OperationResult
+15）增加注册表工具RegistryUtils，可对键CurrentUser进行简单的增/删/改
+16）增加IIS操作工具类 - IISUtils
+17）DEncryptUtils增加36进制工具 - DEncryptUtils.Base36Encode / DEncryptUtils.Base36Decode
+18）增加16进制工具 - HexUtils
+19）增加Unicode转换工具 - UnicodeUtils
+20）ObjectExtension增加AutoMapper映射

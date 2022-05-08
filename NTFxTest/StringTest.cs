@@ -73,5 +73,28 @@ namespace NTFxTest
             Assert.AreEqual(false, "1,2,34,5".ContainsWithSplitter("3"));
             Assert.AreEqual(true, "1,2,34,5".ContainsWithSplitter("5"));
         }
+
+        [TestMethod]
+        public void TestText()
+        {
+            var encode36 = DEncryptUtils.Base36Encode(123);
+            Console.WriteLine(encode36); //3F
+
+            var decode36= DEncryptUtils.Base36Decode(encode36);
+            Console.WriteLine(decode36); //123
+
+            var hex = HexUtils.ToHex("123");
+            Console.WriteLine(hex); //313233
+
+            var normal = HexUtils.GetStrFromHex(hex);
+            Console.WriteLine(normal); //123
+
+            var url = "http://www.singoo.top/?time=2022-05-01 10:00:00";
+            var unicode=UnicodeUtils.Encode(url);
+            Console.WriteLine(unicode); //\u0068\u0074\u0074\u0070\u003a\u002f\u002f\u0077\u0077\u0077\u002e\u0073\u0069\u006e\u0067\u006f\u006f\u002e\u0074\u006f\u0070\u002f\u003f\u0074\u0069\u006d\u0065\u003d\u0032\u0030\u0032\u0032\u002d\u0030\u0035\u002d\u0030\u0031\u0020\u0031\u0030\u003a\u0030\u0030\u003a\u0030\u0030
+
+            var deUnicode = UnicodeUtils.Decode(unicode);
+            Console.WriteLine(deUnicode); //http://www.singoo.top/?time=2022-05-01 10:00:00
+        }
     }
 }

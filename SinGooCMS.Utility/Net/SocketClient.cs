@@ -12,6 +12,7 @@ namespace SinGooCMS.Utility
     /// <summary>
     /// Socket客户端操作类
     /// </summary>
+    [Obsolete("似乎有点问题，暂时不建议使用")]
     public static class SocketClient
     {
         #region 私有字段

@@ -3,13 +3,14 @@ using System.Linq;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SinGooCMS.Utility.Extension;
 
 namespace SinGooCMS.Utility
 {
     /// <summary>
     /// 实体类 特性工具
     /// </summary>
-    public sealed class EntityAttrUtils
+    public static class EntityAttrUtils
     {
         /// <summary>
         /// 表名

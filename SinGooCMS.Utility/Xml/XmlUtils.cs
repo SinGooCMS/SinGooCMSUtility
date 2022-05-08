@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using System.Data;
+using System.Text;
 
 namespace SinGooCMS.Utility
 {
@@ -387,6 +388,78 @@ namespace SinGooCMS.Utility
                 value = value.Replace("\"", "&quot;");
             }
             return value;
+        }
+
+        #endregion
+
+        #region xml格式化
+
+        /// <summary>
+        /// 格式化xml
+        /// </summary>
+        /// <param name="xmlStr"></param>
+        /// <returns></returns>
+        public static string FormatXML(string xmlStr)
+        {
+            //校验是否是XML报文
+            if (!xmlStr.Contains("<?xml version")) return xmlStr;
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlStr);
+
+            MemoryStream memoryStream = new MemoryStream();
+            XmlTextWriter writer = new XmlTextWriter(memoryStream, null)
+            {
+                Formatting = Formatting.Indented//缩进
+            };
+            doc.Save(writer);
+            StreamReader streamReader = new StreamReader(memoryStream);
+            memoryStream.Position = 0;
+            string xmlString = streamReader.ReadToEnd();
+            streamReader.Close();
+            memoryStream.Close();
+            return xmlString;
+        }
+
+        /// <summary>
+        /// 写入格式化xml
+        /// </summary>
+        /// <param name="xmlStr"></param>
+        /// <param name="saveFilePath"></param>
+        /// <param name="encoding"></param>
+        public static void WriteFormatXML(string xmlStr, string saveFilePath, string encoding = "utf-8")
+        {
+            //load unformatted xml into a dom
+            XmlDocument xd = new XmlDocument();
+            xd.LoadXml(xmlStr);
+
+            //will hold formatted xml
+            StringBuilder sb = new StringBuilder();
+
+            //pumps the formatted xml into the StringBuilder above
+            StringWriter sw = new StringWriter(sb);
+
+            //does the formatting
+            XmlTextWriter xtw = null;
+
+            try
+            {
+                //point the xtw at the StringWriter
+                xtw = new XmlTextWriter(sw);
+
+                //we want the output formatted
+                xtw.Formatting = Formatting.Indented;
+
+                //get the dom to dump its contents into the xtw
+                xd.WriteTo(xtw);
+            }
+            finally
+            {
+                //clean up even if error
+                if (xtw != null)
+                    xtw.Close();
+            }
+
+            xd.Save(saveFilePath);
         }
 
         #endregion

@@ -69,9 +69,14 @@ namespace SinGooCMS.Utility.Extension
         public static T JsonToObject<T>(this string strJson) =>
             JsonConvert.DeserializeObject<T>(strJson);
 
-        /// <summary>
+        /// <summary> 
         /// 反序列化(匿名类型),这个挺好的，懒人大法
-        /// </summary>
+        /// <code>
+        /// var json = "{\"UserName\":\"jsonlee\",\"Age\":18}";
+        /// var model = new { UserName = "", Age = 0 };
+        /// var obj = json.JsonToAnonymousObject(model);
+        /// </code>
+        /// </summary> 
         /// <typeparam name="T"></typeparam>
         /// <param name="strJson"></param>
         /// <param name="obj"></param>

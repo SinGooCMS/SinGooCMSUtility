@@ -159,7 +159,16 @@ namespace SinGooCMS.Utility.Extension
         #region 日期格式化
 
         /// <summary>
-        /// 日期格式化
+        /// 日期格式化，最后到三位毫秒
+        /// </summary>
+        /// <param name="dtime"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string ToFormatStringFull(this DateTime dtime, string format = "yyyy-MM-dd HH:mm:ss.fff") =>
+            dtime.ToString(format);
+
+        /// <summary>
+        /// 日期格式化，最后到秒
         /// </summary>
         /// <param name="dtime"></param>
         /// <param name="format"></param>
@@ -354,6 +363,32 @@ namespace SinGooCMS.Utility.Extension
             }
 
             return dateDiff;
+        }
+
+        /// <summary>
+		/// 将时间的天转换为友好的标记
+		/// </summary>
+		/// <param name="dt"></param>
+		/// <returns></returns>
+		public static string FriendlyDate(this DateTime dt)
+        {
+            var ts = dt.Date - DateTime.Now.Date;
+
+            switch (ts.Days)
+            {
+                case 0:
+                    return "今天";
+                case -1:
+                    return "昨天";
+                case -2:
+                    return "前天";
+                case 1:
+                    return "明天";
+                case 2:
+                    return "后天";
+            }
+
+            return Math.Abs(ts.Days) + "天" + (ts.Days > 0 ? "后" : "前");
         }
 
         #endregion

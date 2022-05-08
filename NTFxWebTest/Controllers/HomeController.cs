@@ -14,7 +14,7 @@ namespace NTFxWebTest.Controllers
         public ActionResult Index()
         {
             var builder = new StringBuilder("测试如下：<br/>\r\n");
-
+            
             //IP
             builder.Append($"IP:{IPUtils.GetIP()}<br/>\r\n");
 

@@ -7,7 +7,6 @@ using System.Net;
 using System.Linq;
 using SinGooCMS.Utility.Extension;
 using System.Net.NetworkInformation;
-using System.Net.Http;
 
 namespace SinGooCMS.Utility
 {
@@ -16,6 +15,25 @@ namespace SinGooCMS.Utility
     /// </summary>
     public sealed class NetWorkUtils
     {
+        /// <summary>
+        /// 获取计算机全限定域名( <c>FQDN</c> ,<c>Fully Qualified Domain Name</c>) <see href="http://stackoverflow.com/questions/804700/how-to-find-fqdn-of-local-machine-in-c-net"/>
+        /// </summary>
+        /// <remarks>关于FQDN: <see href="https://baike.baidu.com/item/FQDN/5102541"/></remarks>
+        /// <returns></returns>
+        public static string GetFQDN()
+        {
+            var domainName = IPGlobalProperties.GetIPGlobalProperties().DomainName;
+            var hostName = Dns.GetHostName();
+
+            domainName = "." + domainName;
+            if (!hostName.EndsWith(domainName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                hostName += domainName;
+            }
+
+            return hostName;
+        }
+
         #region HttpGet
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -172,11 +173,26 @@ namespace SinGooCMS.Utility.Extension
         /// <param name="assemblyType">程序集中的某一对象类型</param>
         /// <param name="resName">资源项名称</param>
         /// <param name="resourceHolder">资源的根名称。例如，名为“MyResource.en-US.resources”的资源文件的根名称为“MyResource”。</param>
-        public static string GetStringRes(this Type assemblyType, string resName, string resourceHolder)
+        public static string GetResString(this Type assemblyType, string resName, string resourceHolder)
         {
             Assembly thisAssembly = Assembly.GetAssembly(assemblyType);
             ResourceManager rm = new ResourceManager(resourceHolder, thisAssembly);
             return rm.GetString(resName);
+        }
+
+        /// <summary>
+        /// 读取资源多语言文本
+        /// </summary>
+        /// <param name="assemblyType"></param>
+        /// <param name="resName"></param>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
+        public static string GetResString(this Type assemblyType, string resName, CultureInfo cultureInfo = null)
+        {
+            ResourceManager rm = new ResourceManager(assemblyType);
+            return cultureInfo == null
+                    ? rm.GetString(resName)
+                    : rm.GetString(resName, cultureInfo);
         }
 
         /// <summary>

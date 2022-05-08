@@ -186,7 +186,7 @@ namespace SinGooCMS.Utility.Extension
         /// </summary>
         /// <param name="strTxt">等待处理的字符串</param>
         /// <returns>处理后的字符串</returns>
-        public static String ToHtml(this string strTxt)
+        public static string ToHtml(this string strTxt)
         {
             var sb = new StringBuilder(strTxt);
             sb.Replace("&", "&amp;");

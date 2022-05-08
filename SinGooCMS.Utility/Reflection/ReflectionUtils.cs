@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace SinGooCMS.Utility
@@ -8,6 +9,20 @@ namespace SinGooCMS.Utility
     /// </summary>
     public sealed class ReflectionUtils
     {
+        /// <summary>
+        /// 加载组件
+        /// </summary>
+        /// <param name="dllFileName">组件名称，如a.dll</param>
+        /// <param name="dir">组件所在目录，默认为当前bin目录</param>
+        /// <returns></returns>
+        public static Assembly Load(string dllFileName, string dir = "")
+        {
+            if (string.IsNullOrEmpty(dir))
+                dir = AppDomain.CurrentDomain.BaseDirectory;
+
+            return Assembly.LoadFrom(Path.Combine(dir, dllFileName));
+        }
+
         #region 通过dll文件创建实例
 
         /// <summary>
