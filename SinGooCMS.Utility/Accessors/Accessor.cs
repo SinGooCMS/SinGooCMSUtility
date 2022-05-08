@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -6,22 +6,22 @@ using System.Reflection;
 namespace SinGooCMS.Utility
 {
     /// <summary>
-    /// ÓÃÓÚ¹¹½¨<see cref="ObjectAccessor"/>ºÍ
-    /// <see cref="GenericAccessor{TInstance}"/>ÊµÀı¡£
+    /// ç”¨äºæ„å»º<see cref="ObjectAccessor"/>å’Œ
+    /// <see cref="GenericAccessor{TInstance}"/>å®ä¾‹ã€‚
     /// </summary>    
     public abstract class Accessor
     {
         /// <summary>
-        /// ÓÃ»§´´½¨<see cref="Accessor"/>ÀàĞÍµÄÊµÀı
+        /// ç”¨æˆ·åˆ›å»º<see cref="Accessor"/>ç±»å‹çš„å®ä¾‹
         /// </summary>
         /// <param name="type">
-        /// Òª½øĞĞ·´ÉäµÄÄ£ĞÍÀàĞÍ
+        /// è¦è¿›è¡Œåå°„çš„æ¨¡å‹ç±»å‹
         /// </param>
         /// <param name="ignoreCase">
-        /// ·´ÉäÄ£ĞÍÊôĞÔÊ±ÊÇ·ñºöÂÔ´óĞ¡Ğ´
+        /// åå°„æ¨¡å‹å±æ€§æ—¶æ˜¯å¦å¿½ç•¥å¤§å°å†™
         /// </param>
         /// <param name="includeNonPublic">
-        /// ÊÇ·ñ·´ÉäÄ£ĞÍµÄ·Ç<c>public</c>·½·¨
+        /// æ˜¯å¦åå°„æ¨¡å‹çš„é<c>public</c>æ–¹æ³•
         /// </param>
         protected Accessor(IReflect type, bool ignoreCase, bool includeNonPublic)
         {
@@ -46,36 +46,36 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// »ñÈ¡·´ÉäÄ£ĞÍÊôĞÔÊ±ÓÃµ½µÄÃû³Æ±È½ÏÆ÷ <see cref="StringComparer"/>
+        /// è·å–åå°„æ¨¡å‹å±æ€§æ—¶ç”¨åˆ°çš„åç§°æ¯”è¾ƒå™¨ <see cref="StringComparer"/>
         /// </summary>
         protected StringComparer Comparer { get; }
 
         /// <summary>
-        /// µ±Ç°·´ÉäµÄ¶ÔÏóÀàĞÍ
+        /// å½“å‰åå°„çš„å¯¹è±¡ç±»å‹
         /// </summary>
         public IReflect Type { get; }
 
         /// <summary>
-        /// »ñÈ¡µÄÊôĞÔÊÇ·ñÊÇºöÂÔ´óĞ¡µÄ
+        /// è·å–çš„å±æ€§æ˜¯å¦æ˜¯å¿½ç•¥å¤§å°çš„
         /// </summary>
         public bool IgnoreCase { get; }
 
         /// <summary>
-        /// »ñÈ¡µÄÊôĞÔÊÇ·ñ°üº¬·ÇpublicÀàĞÍµÄ
+        /// è·å–çš„å±æ€§æ˜¯å¦åŒ…å«épublicç±»å‹çš„
         /// </summary>
         public bool IncludesNonPublic { get; }
 
         /// <summary>
-        /// ËùÓĞÄÜ»ñÈ¡µ½µÄÊôĞÔĞÅÏ¢
+        /// æ‰€æœ‰èƒ½è·å–åˆ°çš„å±æ€§ä¿¡æ¯
         /// </summary>
         public SortedList<string, PropertyInfo> Properties { get; }
 
         /// <summary>
-        /// ¸ù¾İ¸ø¶¨µÄ¶ÔÏó´´½¨<see cref="ObjectAccessor"/>ÊµÀı
+        /// æ ¹æ®ç»™å®šçš„å¯¹è±¡åˆ›å»º<see cref="ObjectAccessor"/>å®ä¾‹
         /// </summary>
-        /// <param name="instance">¸ø¶¨µÄ¶ÔÏó</param>
-        /// <param name="ignoreCase">ÊÇ·ñºöÂÔ´óĞ¡Ğ´</param>
-        /// <param name="includeNonPublic">ÊÇ·ñ°üº¬·ÇpublicÊôĞÔ</param>
+        /// <param name="instance">ç»™å®šçš„å¯¹è±¡</param>
+        /// <param name="ignoreCase">æ˜¯å¦å¿½ç•¥å¤§å°å†™</param>
+        /// <param name="includeNonPublic">æ˜¯å¦åŒ…å«épublicå±æ€§</param>
         [DebuggerStepThrough]
         public static ObjectAccessor Build(object instance, bool ignoreCase = false, bool includeNonPublic = false)
         {
@@ -83,11 +83,11 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ¸ù¾İ¸ø¶¨µÄ¶ÔÏóÀàĞÍ´´½¨<see cref="ObjectAccessor"/>ÊµÀı
+        /// æ ¹æ®ç»™å®šçš„å¯¹è±¡ç±»å‹åˆ›å»º<see cref="ObjectAccessor"/>å®ä¾‹
         /// </summary>
-        /// <param name="instanceType">¸ø¶¨µÄ¶ÔÏóÀàĞÍ</param>
-        /// <param name="ignoreCase">ÊÇ·ñºöÂÔ´óĞ¡Ğ´</param>
-        /// <param name="includeNonPublic">ÊÇ·ñ°üº¬·ÇpublicÊôĞÔ</param>
+        /// <param name="instanceType">ç»™å®šçš„å¯¹è±¡ç±»å‹</param>
+        /// <param name="ignoreCase">æ˜¯å¦å¿½ç•¥å¤§å°å†™</param>
+        /// <param name="includeNonPublic">æ˜¯å¦åŒ…å«épublicå±æ€§</param>
         [DebuggerStepThrough]
         public static ObjectAccessor Build(Type instanceType, bool ignoreCase = false, bool includeNonPublic = false)
         {
@@ -95,11 +95,11 @@ namespace SinGooCMS.Utility
         }
 
         /// <summary>
-        /// ¸ù¾İ¸ø¶¨µÄ¶ÔÏóÀàĞÍ´´½¨<see cref="GenericAccessor{TInstance}"/>ÊµÀı
+        /// æ ¹æ®ç»™å®šçš„å¯¹è±¡ç±»å‹åˆ›å»º<see cref="GenericAccessor{TInstance}"/>å®ä¾‹
         /// </summary>
-        /// <typeparam name="TInstance">¶ÔÏóÀàĞÍ</typeparam>
-        /// <param name="ignoreCase">ÊÇ·ñºöÂÔ´óĞ¡Ğ´</param>
-        /// <param name="includeNonPublic">ÊÇ·ñ°üº¬·ÇpublicÊôĞÔ</param>
+        /// <typeparam name="TInstance">å¯¹è±¡ç±»å‹</typeparam>
+        /// <param name="ignoreCase">æ˜¯å¦å¿½ç•¥å¤§å°å†™</param>
+        /// <param name="includeNonPublic">æ˜¯å¦åŒ…å«épublicå±æ€§</param>
         [DebuggerStepThrough]
         public static GenericAccessor<TInstance> Build<TInstance>(
             bool ignoreCase = false, bool includeNonPublic = false) where TInstance : class
